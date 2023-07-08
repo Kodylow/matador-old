@@ -1,0 +1,3 @@
+[submodule "trustedcoin"]
+	path = trustedcoin
+	url = https://github.com/nbd-wtf/trustedcoin

@@ -2,14 +2,15 @@ package main
 
 import (
 	"bytes"
+	"encoding/json"
 	"fmt"
 	"io/ioutil"
 	"log"
 	"net/http"
 	"os"
-
-	"github.com/joho/godotenv"
-	"github.com/niftynei/glightning/glightning"
+	"strings"
+	// "github.com/joho/godotenv"
+	// "github.com/niftynei/glightning/glightning"
 )
 
 const (
@@ -17,20 +18,79 @@ const (
 )
 
 var (
-	APIKey    string
-	Lightning *glightning.Lightning
+	APIKey string
+	// Lightning *glightning.Lightning
+	LnAddr LnAddressResponse
 )
 
-func init() {
-	err := godotenv.Load()
-	if err != nil {
-		log.Fatal("Error loading .env file")
-	}
-	APIKey = os.Getenv("OPENAI_API_KEY")
+type LnAddressResponse struct {
+	Callback    string `json:"callback"`
+	MinSendable int64  `json:"minSendable"`
+	MaxSendable int64  `json:"maxSendable"`
+}
 
-	// Start up the lightning node
-	Lightning = glightning.NewLightning()
-	Lightning.StartUp("lightning-rpc", "/tmp/clight-1")
+type LnCallbackResponse struct {
+	Pr     string `json:"pr"`
+	Status string `json:"status"`
+}
+
+func getCallback(lnAddress string) (LnAddressResponse, error) {
+	// split lnAddress into <username>@<domain>
+	parts := strings.Split(lnAddress, "@")
+	if len(parts) != 2 {
+		return LnAddressResponse{}, fmt.Errorf("invalid lnAddress: %s", lnAddress)
+	}
+	username := parts[0]
+	domain := parts[1]
+	// construct the lnAddress check url
+	url := fmt.Sprintf("https://%s/.well-known/lnurlp/%s", domain, username)
+	// make the request
+	resp, err := http.Get(url)
+	if err != nil {
+		return LnAddressResponse{}, err
+	}
+	if resp.StatusCode != 200 {
+		return LnAddressResponse{}, fmt.Errorf("invalid lnAddress: %s", lnAddress)
+	}
+	// pull the callback off the response body
+	var lnAddrResp LnAddressResponse
+	err = json.NewDecoder(resp.Body).Decode(&lnAddrResp)
+	if err != nil {
+		log.Fatal("Error decoding callback response:", err)
+	}
+
+	return lnAddrResp, nil
+}
+
+func getInvoice(msats int64) (string, error) {
+	if msats > LnAddr.MaxSendable || msats < LnAddr.MinSendable {
+		return "", fmt.Errorf("%d msats not in sendable range of %s - %s:", msats, LnAddr.MinSendable, LnAddr.MaxSendable)
+	}
+	resp, err := http.Get(fmt.Sprintf("%s?amount=%s", LnAddr.Callback, msats))
+	if err != nil {
+		log.Println("Error getting invoice:", err)
+		return "", err
+	}
+	// parse out the LnCallbackResponse
+	var lnCallbackResp LnCallbackResponse
+	err = json.NewDecoder(resp.Body).Decode(&lnCallbackResp)
+	if err != nil || lnCallbackResp.Status != "OK" {
+		log.Println("Error decoding callback response:", err)
+		return "", err
+	}
+	// return the payment request
+	return lnCallbackResp.Pr, nil
+}
+
+func init() {
+	APIKey = os.Getenv("OPENAI_API_KEY")
+	LnAddress := os.Getenv("LN_ADDRESS")
+
+	// Get callback URL from lightning address
+	LnAddr, err := getCallback(LnAddress)
+	if err != nil {
+		log.Fatal("Error getting lnaddress callback:", err)
+	}
 }
 
 // passthroughHandler forwards the request to the OpenAI API
@@ -41,17 +101,16 @@ func passthroughHandler(w http.ResponseWriter, r *http.Request) {
 	authHeader := r.Header.Get("Authorization")
 	if authHeader != "L402 macaroon=macaroon:preimage" {
 		// If not authorized, get invoice from lightning node
-		satoshi := uint64(10000)
-		invoiceLabel := "ayc"
-		invoice, err := Lightning.CreateInvoice(satoshi, invoiceLabel, "desc", uint32(5), nil, "", false)
-		if err != nil {
-			log.Println("Error creating invoice:", err)
-			http.Error(w, err.Error(), http.StatusInternalServerError)
-			return
-		}
+		msats := int64(10000)
+		invoice, err := getInvoice(msats)
+        if err != nil {
+            log.Println("Error getting invoice:", err)
+            w.WriteHeader(http.StatusInternalServerError)
+            return
+        }
 
 		// Send 402 Payment Required with the invoice
-		w.Header().Set("WWW-Authenticate", fmt.Sprintf("L402 macaroon=macaroon invoice=%s", invoice.Bolt11))
+		w.Header().Set("WWW-Authenticate", fmt.Sprintf("L402 macaroon=macaroon invoice=%s", invoice))
 		http.Error(w, "Payment Required", http.StatusPaymentRequired)
 		return
 	}
