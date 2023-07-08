@@ -55,7 +55,7 @@ func PassthroughHandler(w http.ResponseWriter, r *http.Request) {
 			w.WriteHeader(http.StatusInternalServerError)
 			return
 		}
-		restrictions := fmt.Sprintf("paymentHash^%s", paymentHash)
+		restrictions := fmt.Sprintf("paymentHash=%s", paymentHash)
 		restrictedRune, err := auth.GetRestrictedRune(master, restrictions)
 		if err != nil {
 			log.Println("Error getting restricted rune:", err)
