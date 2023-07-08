@@ -3,11 +3,12 @@ package service
 import (
 	"encoding/json"
 	"fmt"
-	ln "github.com/nbd-wtf/ln-decodepay"
 	"io"
 	"log"
 	"net/http"
 	"strings"
+
+	ln "github.com/nbd-wtf/ln-decodepay"
 )
 
 type LnAddressResponse struct {
@@ -23,6 +24,7 @@ type LnCallbackResponse struct {
 
 var LnAddr LnAddressResponse
 
+// GetCallback gets the callback from the lightning address
 func GetCallback(lnAddress string) (LnAddressResponse, error) {
 	parts := strings.Split(lnAddress, "@")
 	if len(parts) != 2 {
@@ -48,6 +50,7 @@ func GetCallback(lnAddress string) (LnAddressResponse, error) {
 	return lnAddrResp, nil
 }
 
+// GetInvoice gets an invoice from the lightning callback
 func GetInvoice(msats uint64) (string, error) {
 	if msats > LnAddr.MaxSendable || msats < LnAddr.MinSendable {
 		return "", fmt.Errorf("%d msats not in sendable range of %d - %d:", msats, LnAddr.MinSendable, LnAddr.MaxSendable)
