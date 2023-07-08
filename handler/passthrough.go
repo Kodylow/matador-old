@@ -3,12 +3,13 @@ package handler
 import (
 	"bytes"
 	"fmt"
-	"github.com/kodylow/actually_openai/auth"
-	"github.com/kodylow/actually_openai/service"
 	"io"
 	"log"
 	"net/http"
 	"os"
+
+	"github.com/kodylow/actually_openai/auth"
+	"github.com/kodylow/actually_openai/service"
 )
 
 var APIKey string = os.Getenv("OPENAI_API_KEY")
@@ -48,10 +49,21 @@ func PassthroughHandler(w http.ResponseWriter, r *http.Request) {
 		}
 		// Use the payment_hash in the invoice
 		// to generate a Rune and restrict it to that payment hash
-		master := auth.GetMasterRune()
-		restrictions := fmt.Sprintf("payment_hash^%s", paymentHash)
-		restrictedRune := auth.GetRestrictedRune(master, restrictions)
-		token := restrictedRune.ToBase64()
+		master, err := auth.GetMasterRune()
+		if err != nil {
+			log.Println("Error getting master rune:", err)
+			w.WriteHeader(http.StatusInternalServerError)
+			return
+		}
+		restrictions := fmt.Sprintf("paymentHash^%s", paymentHash)
+		restrictedRune, err := auth.GetRestrictedRune(master, restrictions)
+		if err != nil {
+			log.Println("Error getting restricted rune:", err)
+			w.WriteHeader(http.StatusInternalServerError)
+			return
+		}
+		log.Println("Successfully created restricted rune:", restrictedRune)
+		token := restrictedRune
 
 		// Send 402 Payment Required with the invoice
 		w.Header().Set("WWW-Authenticate", fmt.Sprintf("L402 token=%s invoice=%s", token, invoice))

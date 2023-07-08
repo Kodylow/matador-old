@@ -1,8 +1,9 @@
 package auth
 
 import (
-	"crypto/rand"
+	"encoding/hex"
 	"log"
+	"os"
 
 	"github.com/bolt-observer/go-runes/runes"
 )
@@ -12,8 +13,13 @@ var secret []byte
 func InitSecret() error {
 	log.Println("Initializing Secret")
 
-	secret = make([]byte, 55)
-	_, err := rand.Read(secret)
+	// Read secret from environment variable
+	envSecret := os.Getenv("RUNE_SECRET")
+
+	// Convert hex encoded string secret to byte array
+	var err error
+	secret, err = hex.DecodeString(envSecret)
+	log.Printf("Secret: %v", secret)
 	if err != nil {
 		log.Printf("An error occurred while initializing secret: %v", err)
 		return err
@@ -23,20 +29,20 @@ func InitSecret() error {
 	return nil
 }
 
-func GetMasterRune() (*runes.Rune, error) {
+func GetMasterRune() (*runes.MasterRune, error) {
 	log.Println("Creating Master Rune")
 
 	master := runes.MustMakeMasterRune(secret)
 
 	log.Println("Successfully Created Master Rune")
-	return &master.Rune, nil
+	return &master, nil
 }
 
-func GetRestrictedRune(master *runes.Rune, restrictions string) (*runes.Rune, error) {
+func GetRestrictedRune(master *runes.MasterRune, restrictions string) (*runes.Rune, error) {
 	log.Println("Creating Restricted Rune")
 
-	restricted := master.MustGetRestrictedFromString(restrictions)
+	restricted := master.Rune.MustGetRestrictedFromString(restrictions)
 
 	log.Println("Successfully Created Restricted Rune")
-	return &restricted.Rune, nil
+	return &restricted, nil
 }
