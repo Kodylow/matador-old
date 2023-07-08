@@ -2,12 +2,14 @@ package main
 
 import (
 	"bytes"
+	"fmt"
 	"io/ioutil"
 	"log"
 	"net/http"
 	"os"
 
 	"github.com/joho/godotenv"
+	"github.com/niftynei/glightning/glightning"
 )
 
 const (
@@ -15,7 +17,8 @@ const (
 )
 
 var (
-	APIKey string
+	APIKey    string
+	Lightning *glightning.Lightning
 )
 
 func init() {
@@ -24,10 +27,34 @@ func init() {
 		log.Fatal("Error loading .env file")
 	}
 	APIKey = os.Getenv("OPENAI_API_KEY")
+
+	// Start up the lightning node
+	Lightning = glightning.NewLightning()
+	Lightning.StartUp("lightning-rpc", "/tmp/clight-1")
 }
 
+// passthroughHandler forwards the request to the OpenAI API
 func passthroughHandler(w http.ResponseWriter, r *http.Request) {
 	log.Println("passthroughHandler started")
+
+	// Check Authorization header
+	authHeader := r.Header.Get("Authorization")
+	if authHeader != "L402 macaroon=macaroon:preimage" {
+		// If not authorized, get invoice from lightning node
+		satoshi := uint64(10000)
+		invoiceLabel := "ayc"
+		invoice, err := Lightning.CreateInvoice(satoshi, invoiceLabel, "desc", uint32(5), nil, "", false)
+		if err != nil {
+			log.Println("Error creating invoice:", err)
+			http.Error(w, err.Error(), http.StatusInternalServerError)
+			return
+		}
+
+		// Send 402 Payment Required with the invoice
+		w.Header().Set("WWW-Authenticate", fmt.Sprintf("L402 macaroon=macaroon invoice=%s", invoice.Bolt11))
+		http.Error(w, "Payment Required", http.StatusPaymentRequired)
+		return
+	}
 
 	// Read the body
 	bodyBytes, err := ioutil.ReadAll(r.Body)
