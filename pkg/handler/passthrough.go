@@ -6,8 +6,8 @@ import (
 	"log"
 	"net/http"
 
-	"github.com/kodylow/actually_openai/auth"
-	"github.com/kodylow/actually_openai/service"
+	"github.com/kodylow/actually_openai/pkg/auth"
+	"github.com/kodylow/actually_openai/pkg/service"
 )
 
 var APIKey string

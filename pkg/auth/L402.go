@@ -9,7 +9,7 @@ import (
 	"net/http"
 	"strings"
 
-	"github.com/kodylow/actually_openai/service"
+	"github.com/kodylow/actually_openai/pkg/service"
 )
 
 func CheckAuthorizationHeader(r *http.Request) error {

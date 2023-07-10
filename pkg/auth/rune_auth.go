@@ -6,7 +6,7 @@ import (
 	"os"
 
 	"github.com/bolt-observer/go-runes/runes"
-	"github.com/kodylow/actually_openai/service"
+	"github.com/kodylow/actually_openai/pkg/service"
 )
 
 var secret []byte

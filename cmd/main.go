@@ -6,8 +6,8 @@ import (
 	"os"
 
 	"github.com/joho/godotenv"
-	"github.com/kodylow/actually_openai/auth" // import the auth package
-	"github.com/kodylow/actually_openai/handler"
+	"github.com/kodylow/actually_openai/pkg/auth" // import the auth package
+	"github.com/kodylow/actually_openai/pkg/handler"
 )
 
 var APIKey string
