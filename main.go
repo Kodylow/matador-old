@@ -20,8 +20,7 @@ func init() {
 		log.Fatal("Error loading .env file")
 	}
 
-	APIKey = os.Getenv("OPENAI_API_KEY")
-	err = handler.Init(os.Getenv("LN_ADDRESS"))
+	err = handler.Init(os.Getenv("OPENAI_API_KEY"), os.Getenv("LN_ADDRESS"))
 	if err != nil {
 		log.Fatal("Error initializing handlers: ", err)
 	}

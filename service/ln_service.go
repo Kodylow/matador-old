@@ -20,6 +20,7 @@ type LnAddressResponse struct {
 type LnCallbackResponse struct {
 	Pr     string `json:"pr"`
 	Status string `json:"status"`
+	Verify string `json:"verify"`
 }
 
 var LnAddr LnAddressResponse
@@ -67,14 +68,14 @@ func GetInvoice(msats uint64) (string, error) {
 		return "", err
 	}
 
-	log.Println("HTTP Response Body: ", string(bodyBytes))
-
 	var lnCallbackResp LnCallbackResponse
 	err = json.Unmarshal(bodyBytes, &lnCallbackResp)
 	if err != nil {
 		log.Println("Error decoding callback response:", err)
 		return "", err
 	}
+
+	log.Println("Verify Url:", lnCallbackResp.Verify)
 
 	return lnCallbackResp.Pr, nil
 }
