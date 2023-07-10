@@ -6,7 +6,6 @@ import (
 	"encoding/hex"
 	"fmt"
 	"io"
-	"log"
 	"net/http"
 )
 
@@ -16,7 +15,6 @@ func GetRequestHash(r *http.Request) string {
 	if err != nil {
 		panic(err)
 	}
-	log.Println("Body bytes:", bodyBytes)
 	
 	// Create a new SHA256 hash
 	h := sha256.New()

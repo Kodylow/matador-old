@@ -40,26 +40,26 @@ func GetRestrictedRuneB64(paymentHash string, requestHash string) (string, error
 
 // L402IsValid checks if the given rune is valid
 func checkTokenRestrictions(runeB64 string, preimage string, reqHash string) bool {
-    // hash the preimage to get the paymentHash
-    hash := service.Sha256Hash(preimage)
+	// hash the preimage to get the paymentHash
+	hash := service.Sha256Hash(preimage)
 	log.Println("Payment Hash Calculated from Preimage:", hash)
 	// get the master rune from the secret
 	master := runes.MustMakeMasterRune(secret)
 	log.Println("Master Rune:", master.Rune.ToBase64())
-    // decode the given rune from base64
-    restrictedRune := runes.MustGetFromBase64(runeB64)
+	// decode the given rune from base64
+	restrictedRune := runes.MustGetFromBase64(runeB64)
 	log.Println("Restricted Rune:", restrictedRune)
-    // create map with the values to evaluate
-    values := map[string]any{
-        "paymentHash": hash,
-        "requestHash": reqHash,
-    }
+	// create map with the values to evaluate
+	values := map[string]any{
+		"paymentHash": hash,
+		"requestHash": reqHash,
+	}
 
-    // evaluate the rune to check if the given hashes match the restrictions
-    err := master.Check(&restrictedRune, values)
+	// evaluate the rune to check if the given hashes match the restrictions
+	err := master.Check(&restrictedRune, values)
 	if err != nil {
 		log.Println("Error checking rune:", err)
 		return false
 	}
-    return true
+	return true
 }

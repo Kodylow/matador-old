@@ -15,7 +15,11 @@ import (
 func CheckAuthorizationHeader(r *http.Request) error {
 	// Check Authorization header
 	authHeader := r.Header.Get("Authorization")
-	log.Println("Authorization header:", authHeader)
+	// verify auth header exists
+	if authHeader == "" {
+		log.Println("No Authorization header")
+		return fmt.Errorf("No Authorization header")
+	}
 
 	// Get the requestHash for checking the rune
 	reqHash := service.GetRequestHash(r)
@@ -30,8 +34,12 @@ func CheckAuthorizationHeader(r *http.Request) error {
 }
 
 func GetL402(r *http.Request) (string, error) {
-	// If not authorized, get invoice from lightning node
-	msats := uint64(10000)
+	// If not authorized, get msats cost for hitting this specific endpoint
+	msats, err := service.MatchRequestMethodPath(r)
+	if err != nil {
+		log.Println("Error matching request method and path for pricing:", err)
+		return "", err
+	}
 	invoice, err := service.GetInvoice(msats)
 	if err != nil {
 		log.Println("Error getting invoice:", err)
@@ -45,10 +53,11 @@ func GetL402(r *http.Request) (string, error) {
 	}
 	log.Println("Payment hash from invoice:", paymentHash)
 	// get the body off the request and take the hash of it
-	bodyHash := service.GetRequestHash(r)
+	requestHash := service.GetRequestHash(r)
+	log.Println("Calculated Request hash:", requestHash)
 	// Use the payment_hash and the body_hash in the invoice
 	// to generate a Rune and restrict it
-	token, err := GetRestrictedRuneB64(paymentHash, bodyHash)
+	token, err := GetRestrictedRuneB64(paymentHash, requestHash)
 	if err != nil {
 		log.Println("Error getting restricted rune:", err)
 		return "", err
