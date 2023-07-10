@@ -20,7 +20,7 @@ type Endpoint struct {
 }
 
 func getMsats(r *http.Request) (uint64, error) {
-  return 10000, nil
+  return 1000, nil
 }
 
 type ImageGenerationBody struct {
@@ -96,28 +96,28 @@ func getMsatsImageGenerations(r *http.Request) (uint64, error) {
 
 // List of endpoints
 var endpoints = []Endpoint{
-  {"GET /v1/models", getMsats},
-  {"GET /v1/models/", getMsats},
+  {"GET /v1/models", getMsats}, // done
+  {"GET /v1/models/", getMsats}, // done
   {"POST /v1/chat/completions", getMsats},
   {"POST /v1/completions", getMsats},
-  {"POST /v1/images/generations", getMsatsImageGenerations},
+  {"POST /v1/images/generations", getMsatsImageGenerations}, // done
   {"POST /v1/images/edits", getMsats},
   {"POST /v1/images/variations", getMsats},
   {"POST /v1/embeddings", getMsats},
   {"POST /v1/audio/transcriptions", getMsats},
   {"POST /v1/audio/translations", getMsats},
-  {"GET /v1/files", getMsats},
-  {"POST /v1/files", getMsats},
-  {"DELETE /v1/files/", getMsats},
-  {"GET /v1/files/", getMsats},
-  {"GET /v1/files/content", getMsats},
-  {"POST /v1/fine-tunes", getMsats},
-  {"GET /v1/fine-tunes", getMsats},
-  {"GET /v1/fine-tunes/", getMsats},
-  {"POST /v1/fine-tunes/cancel", getMsats},
-  {"GET /v1/fine-tunes/events", getMsats},
-  {"DELETE /v1/models/", getMsats},
-  {"POST /v1/moderations", getMsats},
+//   {"GET /v1/files", getMsats},
+//   {"POST /v1/files", getMsats},
+//   {"DELETE /v1/files/", getMsats},
+//   {"GET /v1/files/", getMsats},
+//   {"GET /v1/files/content", getMsats},
+//   {"POST /v1/fine-tunes", getMsats},
+//   {"GET /v1/fine-tunes", getMsats},
+//   {"GET /v1/fine-tunes/", getMsats},
+//   {"POST /v1/fine-tunes/cancel", getMsats},
+//   {"GET /v1/fine-tunes/events", getMsats},
+//   {"DELETE /v1/models/", getMsats},
+//   {"POST /v1/moderations", getMsats},
 }
 
 // MatchRequestMethodPath function
