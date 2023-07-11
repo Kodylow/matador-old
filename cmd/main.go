@@ -7,12 +7,13 @@ import (
 
 	"github.com/joho/godotenv"
 	"github.com/kodylow/actually_openai/pkg/auth" // import the auth package
+	"github.com/kodylow/actually_openai/pkg/database"
 	"github.com/kodylow/actually_openai/pkg/handler"
 )
 
 var APIKey string
 
-const OpenAIEndpoint = "https://api.openai.com/"
+const APIRoot = "https://api.openai.com/"
 
 func init() {
 	err := godotenv.Load()
@@ -20,15 +21,20 @@ func init() {
 		log.Fatal("Error loading .env file")
 	}
 
-	err = handler.Init(os.Getenv("OPENAI_API_KEY"), os.Getenv("LN_ADDRESS"))
+	err = handler.Init(os.Getenv("API_KEY"), os.Getenv("LN_ADDRESS"))
 	if err != nil {
-		log.Fatal("Error initializing handlers: ", err)
+		log.Fatal("Error initializing environment variables for handlers: ", err)
+	}
+
+	err = database.InitDatabase()
+	if err != nil {
+		log.Fatal("Error initializing database: ", err)
 	}
 
 	// Initialize the secret
 	err = auth.InitSecret() // read the secret from the RUNE_SECRET environment variable
 	if err != nil {
-		log.Fatal("Error initializing secret: ", err)
+		log.Fatal("Error initializing secret for server side tokens/runes: ", err)
 	}
 }
 
