@@ -10,7 +10,7 @@ import (
 	"github.com/kodylow/actually_openai/pkg/utils"
 )
 
-func getMsats(reqInfo models.RequestInfo) (uint64, error) {
+func get1000Msats(reqInfo models.RequestInfo) (uint64, error) {
 	return 1000, nil
 }
 

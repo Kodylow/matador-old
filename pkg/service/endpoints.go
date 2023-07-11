@@ -15,16 +15,16 @@ type Endpoint struct {
 
 // List of endpoints
 var supportedEndpoints = []Endpoint{
-	{"GET", "/v1/models", getMsats},  // done
-	{"GET", "/v1/models/", getMsats}, // done
-	{"POST", "/v1/chat/completions", getMsatsChatCompletions},
+	{"GET", "/v1/models", get1000Msats},                       // done
+	{"GET", "/v1/models/", get1000Msats},                      // done
+	{"POST", "/v1/chat/completions", getMsatsChatCompletions}, //done
 	// {"POST", "/v1/completions", getMsats},
 	{"POST", "/v1/images/generations", getMsatsImageGenerations}, // done
-	{"POST", "/v1/images/edits", getMsats},
-	{"POST", "/v1/images/variations", getMsats},
-	{"POST", "/v1/embeddings", getMsats},
-	{"POST", "/v1/audio/transcriptions", getMsats},
-	{"POST", "/v1/audio/translations", getMsats},
+	// {"POST", "/v1/images/edits", getMsats},
+	// {"POST", "/v1/images/variations", getMsats},
+	// {"POST", "/v1/embeddings", getMsats},
+	// {"POST", "/v1/audio/transcriptions", getMsats},
+	// {"POST", "/v1/audio/translations", getMsats},
 	//   {"GET /v1/files", getMsats},
 	//   {"POST /v1/files", getMsats},
 	//   {"DELETE /v1/files/", getMsats},
