@@ -12,12 +12,14 @@ import (
 	"github.com/kodylow/actually_openai/pkg/service"
 )
 
-var APIKey string
-var APIRoot string = "https://api.openai.com/"
+var API_KEY string
+var API_USERNAME string
+var APIRoot string = "https://semantic-life.com"
 
 // Init initializes data for the handler
-func Init(a string, lnAddress string) error {
-	APIKey = a
+func Init(a string, b string, lnAddress string) error {
+	API_KEY = a
+	API_USERNAME = b
 	var err error
 	service.LnAddr, err = service.GetCallback(lnAddress)
 	if err != nil {
@@ -31,21 +33,21 @@ func PassthroughHandler(w http.ResponseWriter, r *http.Request) {
 	log.Println("passthroughHandler started")
 
 	// Read the body
-    body, err := io.ReadAll(r.Body)
-    if err != nil {
-        log.Println("Error reading body:", err)
-        http.Error(w, err.Error(), http.StatusInternalServerError)
-        return
-    }
-    r.Body = io.NopCloser(bytes.NewBuffer(body)) // Reset the body to its original state
+	body, err := io.ReadAll(r.Body)
+	if err != nil {
+		log.Println("Error reading body:", err)
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+	r.Body = io.NopCloser(bytes.NewBuffer(body)) // Reset the body to its original state
 
-    // Create a RequestInfo
-    reqInfo := models.RequestInfo{
+	// Create a RequestInfo
+	reqInfo := models.RequestInfo{
 		AuthHeader: r.Header.Get("Authorization"),
-        Method: r.Method,
-        Path:   r.URL.Path,
-        Body:   body,
-    }
+		Method:     r.Method,
+		Path:       r.URL.Path,
+		Body:       body,
+	}
 
 	err = auth.CheckAuthorizationHeader(reqInfo)
 	if err != nil {
@@ -76,7 +78,8 @@ func PassthroughHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// overwrite the Authorization with the API Key
-	req.Header.Set("Authorization", "Bearer "+APIKey)
+	req.Header.Set("X-User-ID", API_USERNAME)
+	req.Header.Set("X-User-Key", API_KEY)
 	log.Println("Forwarding request to OpenAI API")
 	log.Println("Request:", req)
 	// Forward the request
