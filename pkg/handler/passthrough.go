@@ -17,7 +17,6 @@ var APIRoot string
 
 // Init initializes data for the handler
 func Init(key string, root string, lnAddress string) error {
-	log.Println("LN_ADDRESS:", lnAddress)
 	APIKey = key
 	APIRoot = root
 	var err error
