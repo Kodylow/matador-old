@@ -1,7 +1,9 @@
-run = ["./main"]
+run = ["./matado"]
 
 entrypoint = "main.go"
 hidden = ["main"]
+
+build = ["go", "build", "."]
 
 [languages.go]
 pattern = "**/*.go"

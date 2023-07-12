@@ -6,19 +6,18 @@ import (
 	"os"
 
 	// "github.com/joho/godotenv"
-	"github.com/joho/godotenv"
 	"github.com/kodylow/matador/pkg/auth"
 	"github.com/kodylow/matador/pkg/database"
 	"github.com/kodylow/matador/pkg/handler"
 )
 
 func init() {
-	err := godotenv.Load()
-	if err != nil {
-		log.Fatal("Error loading .env file")
-	}
+	// err := godotenv.Load()
+	// if err != nil {
+	// 	log.Fatal("Error loading .env file")
+	// }
 
-	err = handler.Init(os.Getenv("API_KEY"), os.Getenv("API_ROOT"), os.Getenv("LN_ADDRESS"))
+	err := handler.Init(os.Getenv("API_KEY"), os.Getenv("API_ROOT"), os.Getenv("LN_ADDRESS"))
 	if err != nil {
 		log.Fatal("Error initializing environment variables for handlers: ", err)
 	}
