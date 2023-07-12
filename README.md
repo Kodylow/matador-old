@@ -13,16 +13,32 @@ GET /v1/models
 GET /v1/models/{model}
 ```
 
-You can try it out by hitting exactly like you would hit against `https://api.openai.com` but without the Authentication Header:
+You can try it out by hitting exactly like you would hit against `https://api.openai.com` but without the OpenAI Authentication Header:
 
 ```bash
-curl https://matador-ai.repl.app/v1/chat/completions \
+curl -k -v https://matador.kody.repl.co/v1/chat/completions \
   -H "Content-Type: application/json" \
   -d '{
     "model": "gpt-3.5-turbo",
     "messages": [{"role": "system", "content": "You are a helpful assistant."}, {"role": "user", "content": "Hello!"}]
   }'
 ```
+
+This will return an L402 token and invoice, the invoice is quoted for the previous request's parameters (method, path, body).
+
+Pay the lightning invoice to get the preimage and add retry the same request with the L402 authorization header:
+
+```bash
+curl -k -v https://matador.kody.repl.co/v1/chat/completions \
+  -H "Content-Type: application/json" \
+  -H "Authorization: L402 token:preimage"
+  -d '{
+    "model": "gpt-3.5-turbo",
+    "messages": [{"role": "system", "content": "You are a helpful assistant."}, {"role": "user", "content": "Hello!"}]
+  }'
+```
+
+Olé!! You just paid bitcoin to hit the OpenAI API. Now it's actually open to all!
 
 Support for the other endpoints for audio, embeddings, and images will be added over the next few days.
 
