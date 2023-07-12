@@ -7,16 +7,17 @@ import (
 	"log"
 	"net/http"
 
-	"github.com/kodylow/renegade/pkg/auth"
-	models "github.com/kodylow/renegade/pkg/models"
-	"github.com/kodylow/renegade/pkg/service"
+	"github.com/kodylow/matador/pkg/auth"
+	models "github.com/kodylow/matador/pkg/models"
+	"github.com/kodylow/matador/pkg/service"
 )
 
 var APIKey string
 var APIRoot string
 
 // Init initializes data for the handler
-func Init(key string, root, lnAddress string) error {
+func Init(key string, root string, lnAddress string) error {
+	log.Println("LN_ADDRESS:", lnAddress)
 	APIKey = key
 	APIRoot = root
 	var err error

@@ -3,7 +3,7 @@ package service
 import (
 	"path"
 
-	models "github.com/kodylow/renegade/pkg/models"
+	models "github.com/kodylow/matador/pkg/models"
 )
 
 // Endpoint structure

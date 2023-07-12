@@ -1,10 +1,10 @@
-# Renegade: A Bitcoin-Powered Passthrough Server
+# Matador: A Bitcoin-Powered Passthrough Server
 
-Renegade lets you sell API access against an arbitrary API using your API Key in exchange for bitcoin micropayments via L402 Payment Required Codes. 
+Matador lets you sell API access against an arbitrary API using your API Key in exchange for bitcoin micropayments via L402 Payment Required Codes. 
 
-I built Renegade because I'm sick of waiting for companies to wrap their APIs with Bitcoin payments, so this lets anyone with an API Key act as an L402 passthrough to the actual API, letting anyone pay for using your API Key with bitcoin.
+I built Matador because I'm sick of waiting for companies to wrap their APIs with Bitcoin payments, so this lets anyone with an API Key act as an L402 passthrough to the actual API, letting anyone pay for using your API Key with bitcoin.
 
-This first version of Renegade is configured to run against the OPENAI API and currently supports the following endpoints:
+This first version of Matador is configured to run against the OPENAI API and currently supports the following endpoints:
 
 ```bash
 POST $API_ROOT/v1/chat/completions
@@ -16,7 +16,7 @@ GET /v1/models/{model}
 You can try it out by hitting exactly like you would hit against `https://api.openai.com` but without the Authentication Header:
 
 ```bash
-curl https://renegade-ai.repl.app/v1/chat/completions \
+curl https://matador-ai.repl.app/v1/chat/completions \
   -H "Content-Type: application/json" \
   -d '{
     "model": "gpt-3.5-turbo",
@@ -26,13 +26,13 @@ curl https://renegade-ai.repl.app/v1/chat/completions \
 
 Support for the other endpoints for audio, embeddings, and images will be added over the next few days.
 
-Renegade passes the request through exactly as if you were hitting against the actual API, replacing the L402 Authorization Header the client hits against renegade with your API key. Clients pay you in Bitcoin, you pay the API service with your credit card.
+Matador passes the request through exactly as if you were hitting against the actual API, replacing the L402 Authorization Header the client hits against matador with your API key. Clients pay you in Bitcoin, you pay the API service with your credit card.
 
-Renegade is a WIP, use at your own risk (MIT LICENSE copied below)
+Matador is a WIP, use at your own risk (MIT LICENSE copied below)
 
 ## Getting Started
 
-Here's how to get Renegade up and running
+Here's how to get Matador up and running
 
 ### Prerequisites
 
@@ -42,10 +42,10 @@ Or just load this into Replit, the default configs from the checked in .replit a
 
 ### Clone the repository
 
-To clone the Renegade repository to your local system, execute the following command in your terminal:
+To clone the Matador repository to your local system, execute the following command in your terminal:
 
 ```bash
-git clone https://github.com/kodylow/renegade
+git clone https://github.com/kodylow/matador
 ```
 
 ### Configuration
@@ -61,13 +61,13 @@ To generate the rune secret you just need some random base64 bytes, you can use 
 
 You can change the pricing and endpoints as well, the current configuration is extremely conservative (will overcharge in bitcoin terms) and hardcodes a price of bitcoin at $28,000 until I get around to creating a bitcoin price service.
 
-# Running Renegade
+# Running Matador
 To launch the server, execute the following command:
 
 ```bash
 go run main.go
 ```
-Voila! Your Renegade server is now live, ready to process requests and exchange API key access for Bitcoin payments.
+Voila! Your Matador server is now live, ready to process requests and exchange API key access for Bitcoin payments.
 
 # MIT License
 

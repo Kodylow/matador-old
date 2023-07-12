@@ -10,7 +10,7 @@ import (
 	"strings"
 
 	"github.com/bolt-observer/go-runes/runes"
-	"github.com/kodylow/renegade/pkg/utils"
+	"github.com/kodylow/matador/pkg/utils"
 )
 
 type RequestInfo struct {

@@ -6,8 +6,8 @@ import (
 	"fmt"
 	"log"
 
-	models "github.com/kodylow/renegade/pkg/models"
-	"github.com/kodylow/renegade/pkg/utils"
+	models "github.com/kodylow/matador/pkg/models"
+	"github.com/kodylow/matador/pkg/utils"
 )
 
 func get1000Msats(reqInfo models.RequestInfo) (uint64, error) {

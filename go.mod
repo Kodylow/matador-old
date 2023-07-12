@@ -1,4 +1,4 @@
-module github.com/kodylow/renegade
+module github.com/kodylow/matador
 
 go 1.20
 

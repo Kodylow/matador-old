@@ -6,9 +6,9 @@ import (
 	"os"
 
 	// "github.com/joho/godotenv"
-	"github.com/kodylow/renegade/pkg/auth"
-	"github.com/kodylow/renegade/pkg/database"
-	"github.com/kodylow/renegade/pkg/handler"
+	"github.com/kodylow/matador/pkg/auth"
+	"github.com/kodylow/matador/pkg/database"
+	"github.com/kodylow/matador/pkg/handler"
 )
 
 func init() {
