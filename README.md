@@ -9,14 +9,14 @@ This first version of Matador is configured to run against the OPENAI API and cu
 ```bash
 POST $API_ROOT/v1/chat/completions
 GET $API_ROOT/v1/images/generations
-GET /v1/models
-GET /v1/models/{model}
+GET $API_ROOT/v1/models
+GET $API_ROOT/v1/models/{model}
 ```
 
 You can try it out by hitting exactly like you would hit against `https://api.openai.com` but without the OpenAI Authentication Header:
 
 ```bash
-curl -k -v https://matador.kody.repl.co/v1/chat/completions \
+curl -k -v http://localhost:8080/v1/chat/completions \
   -H "Content-Type: application/json" \
   -d '{
     "model": "gpt-3.5-turbo",
@@ -72,7 +72,7 @@ Post-cloning, navigate to the project root and create a .env file (or on Replit 
 API_KEY = YOUR_OPENAI_API_KEY
 API_ROOT = "https://api.openai.com"
 LN_ADDRESS = "yourusername@getalby.com"
-RUNE_SECRET = "rqV9+bCcwGVNh2MkzoHnkGAp0YLrySRd1nLAlnNqrAc="
+RUNE_SECRET = "some-base65-secret-bytes-as-hex"
 ```
 
 To generate the rune secret you just need some random base64 bytes, you can use this command: openssl rand -base64 32
@@ -85,7 +85,7 @@ To launch the server, execute the following command:
 ```bash
 go run main.go
 ```
-Voila! Your Matador server is now live, ready to process requests and exchange API key access for Bitcoin payments.
+Olé! Your Matador server is now live, ready to process requests and exchange API key access for Bitcoin payments.
 
 # MIT License
 
