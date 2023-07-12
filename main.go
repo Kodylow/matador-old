@@ -6,7 +6,7 @@ import (
 	"os"
 
 	// "github.com/joho/godotenv"
-	"github.com/kodylow/renegade/pkg/auth" // import the auth package
+	"github.com/kodylow/renegade/pkg/auth"
 	"github.com/kodylow/renegade/pkg/database"
 	"github.com/kodylow/renegade/pkg/handler"
 )

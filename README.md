@@ -13,27 +13,18 @@ GET /v1/models
 GET /v1/models/{model}
 ```
 
-Support for these other endpoints will be added over the next few days:
+You can try it out by hitting exactly like you would hit against `https://api.openai.com` but without the Authentication Header:
+
 ```bash
-POST /v1/images/edits
-POST /v1/images/variations
-POST /v1/embeddings
-POST /v1/audio/transcriptions
-POST /v1/audio/translations
-GET /v1/files
-POST /v1/files
-DELETE /v1/files/{file}
-GET /v1/files/{file}
-GET /v1/files/content
-POST /v1/fine-tunes
-GET /v1/fine-tunes
-GET /v1/fine-tunes/{model}
-POST /v1/fine-tunes/cancel
-GET /v1/fine-tunes/events
-DELETE /v1/models/{model}
-POST /v1/moderations
+curl https://renegade-ai.repl.app/v1/chat/completions \
+  -H "Content-Type: application/json" \
+  -d '{
+    "model": "gpt-3.5-turbo",
+    "messages": [{"role": "system", "content": "You are a helpful assistant."}, {"role": "user", "content": "Hello!"}]
+  }'
 ```
 
+Support for the other endpoints for audio, embeddings, and images will be added over the next few days.
 
 Renegade passes the request through exactly as if you were hitting against the actual API, replacing the L402 Authorization Header the client hits against renegade with your API key. Clients pay you in Bitcoin, you pay the API service with your credit card.
 

@@ -2,7 +2,6 @@ run = ["./main"]
 
 entrypoint = "main.go"
 hidden = ["main"]
-compile = ["go", "build", "-o", "main", "."]
 
 [languages.go]
 pattern = "**/*.go"
