@@ -3,7 +3,7 @@ package service
 import (
 	"path"
 
-	models "github.com/kodylow/actually_openai/pkg/models"
+	models "github.com/kodylow/renegade/pkg/models"
 )
 
 // Endpoint structure

@@ -1,4 +1,4 @@
-module github.com/kodylow/actually_openai
+module github.com/kodylow/renegade
 
 go 1.20
 

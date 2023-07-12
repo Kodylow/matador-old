@@ -6,9 +6,9 @@ import (
 	"os"
 
 	"github.com/joho/godotenv"
-	"github.com/kodylow/actually_openai/pkg/auth" // import the auth package
-	"github.com/kodylow/actually_openai/pkg/database"
-	"github.com/kodylow/actually_openai/pkg/handler"
+	"github.com/kodylow/renegade/pkg/auth" // import the auth package
+	"github.com/kodylow/renegade/pkg/database"
+	"github.com/kodylow/renegade/pkg/handler"
 )
 
 var APIKey string
@@ -36,6 +36,8 @@ func init() {
 	if err != nil {
 		log.Fatal("Error initializing secret for server side tokens/runes: ", err)
 	}
+
+	log.Println("Successfully Initialized Secrets")
 }
 
 func main() {

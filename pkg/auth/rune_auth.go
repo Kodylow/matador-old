@@ -12,8 +12,6 @@ var secret []byte
 
 // InitSecret initializes the secret from the environment variable
 func InitSecret() error {
-	log.Println("Initializing Secret")
-
 	// Read secret from environment variable
 	envSecret := os.Getenv("RUNE_SECRET")
 
@@ -24,8 +22,6 @@ func InitSecret() error {
 		log.Printf("An error occurred while initializing secret: %v", err)
 		return err
 	}
-
-	log.Println("Successfully Initialized Secret")
 	return nil
 }
 

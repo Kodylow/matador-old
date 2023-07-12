@@ -10,14 +10,14 @@ import (
 	"strings"
 
 	"github.com/bolt-observer/go-runes/runes"
-	"github.com/kodylow/actually_openai/pkg/utils"
+	"github.com/kodylow/renegade/pkg/utils"
 )
 
 type RequestInfo struct {
 	AuthHeader string
-	Method  string
-	Path    string
-	Body    []byte
+	Method     string
+	Path       string
+	Body       []byte
 }
 
 // GetRequestHash returns the SHA256 hash of the request's relevant fields
@@ -67,7 +67,7 @@ func checkTokenRestrictions(runeB64 string, preimage string, reqHash string) boo
 	// Convert hex encoded string secret to byte array
 	var err error
 	secret, err := hex.DecodeString(envSecret)
-	
+
 	master := runes.MustMakeMasterRune(secret)
 	log.Println("Master Rune:", master.Rune.ToBase64())
 	// decode the given rune from base64

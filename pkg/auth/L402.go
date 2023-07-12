@@ -8,9 +8,9 @@ import (
 	"log"
 	"strings"
 
-	"github.com/kodylow/actually_openai/pkg/database"
-	models "github.com/kodylow/actually_openai/pkg/models"
-	"github.com/kodylow/actually_openai/pkg/service"
+	"github.com/kodylow/renegade/pkg/database"
+	models "github.com/kodylow/renegade/pkg/models"
+	"github.com/kodylow/renegade/pkg/service"
 )
 
 // ExtractToken extracts the token from the Authorization header

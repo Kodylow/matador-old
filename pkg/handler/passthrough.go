@@ -7,9 +7,9 @@ import (
 	"log"
 	"net/http"
 
-	"github.com/kodylow/actually_openai/pkg/auth"
-	models "github.com/kodylow/actually_openai/pkg/models"
-	"github.com/kodylow/actually_openai/pkg/service"
+	"github.com/kodylow/renegade/pkg/auth"
+	models "github.com/kodylow/renegade/pkg/models"
+	"github.com/kodylow/renegade/pkg/service"
 )
 
 var APIKey string
@@ -31,21 +31,21 @@ func PassthroughHandler(w http.ResponseWriter, r *http.Request) {
 	log.Println("passthroughHandler started")
 
 	// Read the body
-    body, err := io.ReadAll(r.Body)
-    if err != nil {
-        log.Println("Error reading body:", err)
-        http.Error(w, err.Error(), http.StatusInternalServerError)
-        return
-    }
-    r.Body = io.NopCloser(bytes.NewBuffer(body)) // Reset the body to its original state
+	body, err := io.ReadAll(r.Body)
+	if err != nil {
+		log.Println("Error reading body:", err)
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+	r.Body = io.NopCloser(bytes.NewBuffer(body)) // Reset the body to its original state
 
-    // Create a RequestInfo
-    reqInfo := models.RequestInfo{
+	// Create a RequestInfo
+	reqInfo := models.RequestInfo{
 		AuthHeader: r.Header.Get("Authorization"),
-        Method: r.Method,
-        Path:   r.URL.Path,
-        Body:   body,
-    }
+		Method:     r.Method,
+		Path:       r.URL.Path,
+		Body:       body,
+	}
 
 	err = auth.CheckAuthorizationHeader(reqInfo)
 	if err != nil {
