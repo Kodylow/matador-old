@@ -4,6 +4,37 @@ Renegade lets you sell API access against an arbitrary API using your API Key in
 
 I built Renegade because I'm sick of waiting for companies to wrap their APIs with Bitcoin payments, so this lets anyone with an API Key act as an L402 passthrough to the actual API, letting anyone pay for using your API Key with bitcoin.
 
+This first version of Renegade is configured to run against the OPENAI API and currently supports the following endpoints:
+
+```bash
+POST $API_ROOT/v1/chat/completions
+GET $API_ROOT/v1/images/generations
+GET /v1/models
+GET /v1/models/{model}
+```
+
+Support for these other endpoints will be added over the next few days:
+```bash
+POST /v1/images/edits
+POST /v1/images/variations
+POST /v1/embeddings
+POST /v1/audio/transcriptions
+POST /v1/audio/translations
+GET /v1/files
+POST /v1/files
+DELETE /v1/files/{file}
+GET /v1/files/{file}
+GET /v1/files/content
+POST /v1/fine-tunes
+GET /v1/fine-tunes
+GET /v1/fine-tunes/{model}
+POST /v1/fine-tunes/cancel
+GET /v1/fine-tunes/events
+DELETE /v1/models/{model}
+POST /v1/moderations
+```
+
+
 Renegade passes the request through exactly as if you were hitting against the actual API, replacing the L402 Authorization Header the client hits against renegade with your API key. Clients pay you in Bitcoin, you pay the API service with your credit card.
 
 Renegade is a WIP, use at your own risk (MIT LICENSE copied below)
@@ -14,9 +45,9 @@ Here's how to get Renegade up and running
 
 ### Prerequisites
 
-You need to have the Go programming language installed on your system. If you haven't installed it yet, follow the official Go installation instructions here: [https://golang.org/doc/install](https://golang.org/doc/install)
+You need to have Golang installed: [https://golang.org/doc/install](https://golang.org/doc/install)
 
-Or just load this into Replit.
+Or just load this into Replit, the default configs from the checked in .replit and replit.nix work out of the box
 
 ### Clone the repository
 
@@ -26,17 +57,20 @@ To clone the Renegade repository to your local system, execute the following com
 git clone https://github.com/kodylow/renegade
 ```
 
-Configuration
-Post-cloning, navigate to the project root and create a .env file. This file must include your API key, Lightning Network address, and API root as follows:
+### Configuration
+Post-cloning, navigate to the project root and create a .env file (or on Replit set these in Secrets). This file must include your API key, the API root, your Lightning address, and a Rune secret as follows:
 ```dotenv
-API_KEY=your_api_key
-LNADDRESS=your_lightning_network_address
-API_ROOT=your_api_root
+API_KEY = YOUR_OPENAI_API_KEY
+API_ROOT = "https://api.openai.com"
+LN_ADDRESS = "yourusername@getalby.com"
+RUNE_SECRET = "rqV9+bCcwGVNh2MkzoHnkGAp0YLrySRd1nLAlnNqrAc="
 ```
 
-You'll also need to set pricing through the PricingService. You can match pricing functions for specific endpoints or use a flatfee.
+To generate the rune secret you just need some random base64 bytes, you can use this command: openssl rand -base64 32
 
-Running Renegade
+You can change the pricing and endpoints as well, the current configuration is extremely conservative (will overcharge in bitcoin terms) and hardcodes a price of bitcoin at $28,000 until I get around to creating a bitcoin price service.
+
+# Running Renegade
 To launch the server, execute the following command:
 
 ```bash
