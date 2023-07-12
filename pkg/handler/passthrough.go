@@ -95,6 +95,7 @@ func PassthroughHandler(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
+	log.Println("Response from OpenAI:", string(responseBody))
 
 	// Write the response back to the client
 	w.Write(responseBody)

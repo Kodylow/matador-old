@@ -5,18 +5,14 @@ import (
 	"net/http"
 	"os"
 
-	// "github.com/joho/godotenv"
+	"github.com/gorilla/mux"
 	"github.com/kodylow/matador/pkg/auth"
 	"github.com/kodylow/matador/pkg/database"
 	"github.com/kodylow/matador/pkg/handler"
+	"github.com/rs/cors"
 )
 
 func init() {
-	// err := godotenv.Load()
-	// if err != nil {
-	// 	log.Fatal("Error loading .env file")
-	// }
-
 	err := handler.Init(os.Getenv("API_KEY"), os.Getenv("API_ROOT"), os.Getenv("LN_ADDRESS"))
 	if err != nil {
 		log.Fatal("Error initializing environment variables for handlers: ", err)
@@ -35,9 +31,26 @@ func init() {
 }
 
 func main() {
-	http.HandleFunc("/", handler.RootHandler)
-	http.HandleFunc("/v1/", handler.PassthroughHandler)
+	router := mux.NewRouter()
 
-	log.Println("Server starting on port 8080")
-	log.Fatal(http.ListenAndServe(":8080", nil))
+	// Root handler
+	router.HandleFunc("/", handler.RootHandler)
+
+	// v1 subrouter
+	v1Router := router.PathPrefix("/v1/").Subrouter()
+	v1Router.PathPrefix("/").HandlerFunc(handler.PassthroughHandler)
+
+	// setup CORS
+	c := cors.New(cors.Options{
+		AllowedOrigins:   []string{"*"}, // change this to the domains you want to al
+		AllowedMethods:   []string{"GET", "POST", "OPTIONS", "PUT", "DELETE"},
+		AllowedHeaders:   []string{"*"}, // change this to the headers you want to allow
+        ExposedHeaders:   []string{"*"}, // change this to the headers you want to expose
+		AllowCredentials: true,
+	})
+
+	handler := c.Handler(router)
+
+	log.Println("Gorilla CORS Server starting on port 8080")
+	log.Fatal(http.ListenAndServe(":8080", handler))
 }

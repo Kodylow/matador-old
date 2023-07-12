@@ -1,9 +1,9 @@
-run = ["./matado"]
+run = ["./matador"]
 
 entrypoint = "main.go"
 hidden = ["main"]
 
-build = ["go", "build", "."]
+build = ["go", "build"]
 
 [languages.go]
 pattern = "**/*.go"
@@ -18,7 +18,7 @@ channel = "unstable"
 requiredFiles = [".replit", "replit.nix"]
 
 [deployment]
-run = ["sh", "-c", "go run ."]
-build = ["sh", "-c", "go build -o main ."]
+run = ["sh", "-c", "./matador"]
 ignorePorts = false
 deploymentTarget = "gce"
+build = ["sh", "-c", "go build"]
