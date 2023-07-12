@@ -10,11 +10,6 @@ import (
 	"github.com/kodylow/renegade/pkg/database"
 	"github.com/kodylow/renegade/pkg/handler"
 )
-
-var APIKey string
-
-const APIRoot = "https://api.openai.com/"
-
 func init() {
 	err := godotenv.Load()
 	if err != nil {

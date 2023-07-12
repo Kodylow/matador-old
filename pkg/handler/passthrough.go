@@ -13,11 +13,12 @@ import (
 )
 
 var APIKey string
-var APIRoot string = "https://api.openai.com/"
+var APIRoot string
 
 // Init initializes data for the handler
-func Init(a string, lnAddress string) error {
-	APIKey = a
+func Init(key string, root, lnAddress string) error {
+	APIKey = key
+	APIRoot = root
 	var err error
 	service.LnAddr, err = service.GetCallback(lnAddress)
 	if err != nil {
