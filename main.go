@@ -48,7 +48,19 @@ func main() {
 	router.HandleFunc("/v1/chat/completions", handler.ChatCompletionsHandler).Methods("POST")
 	router.HandleFunc("/v1/images/generations", handler.ImagesGenerationsHandler).Methods("POST")
 	router.HandleFunc("/v1/embeddings", handler.EmbeddingsHandler).Methods("POST")
-	router.PathPrefix("/").Handler(http.FileServer(http.Dir("./static/")))
+
+	// Add demo routes
+	demoRouter := router.PathPrefix("/demo").Subrouter()
+	demoRouter.HandleFunc("/", handler.DemoIndexHandler)
+	demoRouter.HandleFunc("/chat", handler.DemoChatHandler)
+	demoRouter.HandleFunc("/images", handler.DemoImageHandler)
+	demoRouter.HandleFunc("/embeddings", handler.DemoEmbeddingsHandler)
+
+	// add static file server
+	router.PathPrefix("/static/").Handler(http.StripPrefix("/static/", http.FileServer(http.Dir("./static/"))))
+	router.PathPrefix("/demo/static/").Handler(http.StripPrefix("/demo/static/", http.FileServer(http.Dir("./static/"))))
+
+	router.HandleFunc("/", handler.DemoIndexHandler)
 
 	// setup CORS
 	c := cors.New(cors.Options{

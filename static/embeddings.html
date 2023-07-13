@@ -1,0 +1,58 @@
+{{ define "content" }}
+<div class="grid-container">
+    <div class="demo">
+        <h2 class="text-2xl">Embeddings Demo</h2>
+        <div class="flex flex-col space-y-2">
+            <label for="embeddingInput">Input:</label>
+            <textarea id="embeddingInput"
+                class="bg-gray-700 p-2 h-20 rounded">The food was delicious and the waiter...</textarea>
+            <label for="embeddingModel">Model:</label>
+            <select id="embeddingModel" class="bg-gray-700 p-2 rounded">
+                <option value="text-embedding-ada-002">text-embedding-ada-002</option>
+            </select>
+            <button onclick="generateEmbedding()" class="p-2 bg-green-500 rounded text-gray-800">Generate
+                Embedding</button>
+        </div>
+        <h3 class="text-xl">Response:</h3>
+        <pre id="embeddingResponse" class="p-2 rounded bg-gray-700 text-green-500"></pre>
+    </div>
+
+    <div class="headers">
+        <h2 class="text-2xl">L402 Headers for Embeddings</h2>
+        <h3 class="text-xl">WWW-Authenticate:</h3>
+        <pre id="embeddingL402Header" class="p-2 rounded bg-gray-700 text-red-500"></pre>
+        <h3 class="text-xl">Authorization:</h3>
+        <pre id="embeddingAuthorizationHeader" class="p-2 rounded bg-gray-700 text-blue-500"></pre>
+    </div>
+</div>
+{{ end }}
+
+{{ define "scripts" }}
+<script>
+    async function generateEmbedding() {
+        if (typeof window.webln === "undefined") {
+            alert("This demo of Matador requires a bitcoin browser extension, you can download one at https://getalby.com");
+            return;
+        }
+        const input = document.querySelector("#embeddingInput").value;
+        const model = document.querySelector("#embeddingModel").value;
+        const payload = {
+            input: input,
+            model: model
+        };
+
+        const response = await fetchWithL402("http://localhost:8080/v1/embeddings", {
+            method: "POST",
+            body: JSON.stringify(payload),
+            mode: "cors",
+            headers: { "Content-Type": "application/json", Accept: "application/json" },
+        }, { l402ElementId: "embeddingL402Header", authorizationElementId: "embeddingAuthorizationHeader" });
+
+        // Displaying the response
+        const json = await response.json();
+        // limiting the number of embeddings displayed
+        json.data[0].embedding = json.data[0].embedding.slice(0, 10).concat(["... (total 1536 values)"]);
+        document.querySelector("#embeddingResponse").textContent = JSON.stringify(json, null, 2);
+    }
+</script>
+{{ end }}

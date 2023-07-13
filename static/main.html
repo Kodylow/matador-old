@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html class="dark">
+
+<head>
+    <title>Matador Demo Page</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.1.4/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="static/styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron&display=swap" rel="stylesheet">
+</head>
+
+<body class="bg-gray-800 text-gray-100 p-10 flex flex-col items-center space-y-10">
+    <h1 class="text-4xl">Matador Demo Page</h1>
+
+    <div id="intro">
+        <p> Matador is a Bitcoin-powered passthrough server that lets anyone use your API key in exchange for bitcoin
+            micropayments. It is a full API implementation, this demo page shows how to hit against all the supported
+            endpoints</p><br>
+        <p>This deployment of Matador is currently configured to hit against the <a
+                href="https://platform.openai.com/docs/api-reference" style="color: greenyellow">OpenAI API</a> and
+            supports:
+        </p>
+        <nav class="w-full bg-gray-700 my-4 rounded-lg shadow-lg text-center">
+            <div class="flex items-center justify-around text-gray-100">
+                <a href="/demo/chat" class="p-4 hover:bg-gray-600 {{if eq .CurrentPage "chat"}}bg-gray-600{{end}}">Chat Completion</a>
+                <a href="/demo/images" class="p-4 hover:bg-gray-600 {{if eq .CurrentPage "images"}}bg-gray-600{{end}}">Image Generation</a>
+                <a href="/demo/embeddings" class="p-4 hover:bg-gray-600 {{if eq .CurrentPage "embeddings"}}bg-gray-600{{end}}">Embeddings</a>
+            </div>
+        </nav>
+        <br>
+        <p>To contribute and report issues please jump to the <a href="https://github.com/kodylow/matador"
+                style="color: greenyellow">GitHub</a>.
+        </p>
+    </div>
+    {{ block "content" . }}{{ end }}
+    <script src="static/common.js"></script>
+    {{ block "scripts" . }}{{ end }}
+</body>
+
+</html>

@@ -1,0 +1,54 @@
+{{ define "content" }}
+<!-- Image Generation Demo and Headers -->
+<div class="grid-container">
+    <div class="demo">
+        <h2 class="text-2xl">Image Generation Demo</h2>
+        <div class="flex flex-col space-y-2">
+            <label for="prompt">Prompt:</label>
+            <textarea id="prompt" class="bg-gray-700 p-2 h-20 rounded"></textarea>
+            <button onclick="generateImage()" class="p-2 bg-green-500 rounded text-gray-800">Generate Image</button>
+        </div>
+        <h3 class="text-xl">Response:</h3>
+        <pre id="imageGenerationResponse" class="p-2 rounded bg-gray-700 text-green-500"></pre>
+    </div>
+
+    <div class="headers">
+        <h2 class="text-2xl">L402 Headers for Image Generation</h2>
+        <h3 class="text-xl">WWW-Authenticate:</h3>
+        <pre id="imageGenerationL402Header" class="p-2 rounded bg-gray-700 text-red-500"></pre>
+        <h3 class="text-xl">Authorization:</h3>
+        <pre id="imageGenerationAuthorizationHeader" class="p-2 rounded bg-gray-700 text-blue-500"></pre>
+    </div>
+</div>
+{{ end }}
+
+{{ define "scripts" }}
+<script>
+    async function generateImage() {
+        if (typeof window.webln === "undefined") {
+            alert("This demo of Matador requires a bitcoin browser extension, you can download one at https://getalby.com");
+            return;
+        }
+        const prompt = document.querySelector("#prompt").value;
+        const payload = {
+            prompt: prompt,
+            n: 1,
+            size: "512x512",
+            response_format: "url",
+        };
+
+        // Replace the URL with your Matador server's URL
+        const response = await fetchWithL402("https://matador-ai.replit.app/v1/images/generations", {
+            method: "POST",
+            body: JSON.stringify(payload),
+            mode: "cors",
+            headers: { "Content-Type": "application/json", Accept: "application/json" },
+        }, { l402ElementId: "imageGenerationL402Header", authorizationElementId: "imageGenerationAuthorizationHeader" });
+
+
+        // Displaying the response
+        const json = await response.json();
+        document.querySelector("#imageGenerationResponse").textContent = JSON.stringify(json, null, 2);
+    }
+</script>
+{{ end }}
