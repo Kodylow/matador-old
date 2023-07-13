@@ -2,337 +2,119 @@
 <html class="dark">
 
 <head>
-  <title>Matador Demo Page</title>
-  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.1.4/dist/tailwind.min.css" rel="stylesheet">
-  <style>
-    @import url('https://fonts.googleapis.com/css2?family=Orbitron&display=swap');
-
-    body {
-      font-family: 'Orbitron', sans-serif;
-      width: 98vw;
-      /* set width to 98% of viewport width */
-      height: 98vh;
-      /* set height to 98% of viewport height */
-      margin: auto;
-      /* center the body */
-      overflow: auto;
-      /* add scrolling when content exceeds body size */
-      background-color: #181a1b;
-    }
-
-    .dot {
-      transition: .5s ease-in;
-    }
-
-    .grid-container {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      width: 100%;
-    }
-
-    .demo {
-      border-right: 2px solid #ccc;
-      padding-right: 10px;
-      width: 100%;
-    }
-
-    .headers {
-      width: 100%;
-      padding-left: 10px;
-      /* limit the width of the headers section */
-      overflow-x: auto;
-      /* add horizontal scrolling when content exceeds section width */
-    }
-
-    pre {
-      white-space: pre-wrap;
-      /* allow long lines to wrap */
-      word-wrap: break-word;
-      /* allow long words to be broken and wrapped */
-      overflow-wrap: break-word;
-      /* similar to word-wrap, but more comprehensive */
-    }
-
-    #expandable {
-      overflow: hidden;
-      display: -webkit-box;
-      -webkit-line-clamp: 3;
-      /* number of lines to show */
-      -webkit-box-orient: vertical;
-    }
-  </style>
+    <title>Matador Demo Page</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.1.4/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron&display=swap" rel="stylesheet">
 </head>
 
 <body class="bg-gray-800 text-gray-100 p-10 flex flex-col items-center space-y-10">
-  <h1 class="text-4xl">Matador Demo Page</h1>
+    <h1 class="text-4xl">Matador Demo Page</h1>
 
-  <div id="intro">
-    <p>
-      Matador is a Bitcoin-powered passthrough server that lets anyone use your API key in exchange for bitcoin
-      micropayments. It is a full API implementation, this demo page shows how to hit against all the supported
-      endpoints</p><br>
-    <p>This deployment of Matador is currently configured to hit against the <a
-        href="https://platform.openai.com/docs/api-reference" style="color: greenyellow">OpenAI API</a> and supports:
-    </p>
-    <div class="text-center"><br>
-      <ol>
-        <li>- chat completions</li>
-        <li>- image generations</li>
-        <li>- embeddings</li>
-        <li>- audio transcriptions (soon TM)</li>
-        <li>- audio translations (soon TM)</li>
-      </ol>
-    </div>
-    <br>
-    <p>To contribute and report issues please jump to the <a href="https://github.com/kodylow/matador"
-        style="color: greenyellow">GitHub</a>.
-    </p>
-  </div>
-
-  <!-- Chat Completion Demo and Headers -->
-  <div class="grid-container">
-    <div class="demo">
-      <h2 class="text-2xl">Chat Completion Demo</h2>
-      <div class="flex flex-col space-y-2">
-        <label for="model">Model:</label>
-        <select id="model" class="bg-gray-700 p-2 rounded">
-          <option value="gpt-3.5-turbo">gpt-3.5-turbo</option>
-          <option value="gpt-4">gpt-4</option>
-        </select>
-        <label for="systemRole">System Prompt:</label>
-        <textarea id="systemRole" class="bg-gray-700 p-2 h-20 rounded">You are a helpful assistant.</textarea>
-        <label for="userRole">User Prompt:</label>
-        <textarea id="userRole" class="bg-gray-700 p-2 h-20 rounded"></textarea>
-        <button onclick="generateChatCompletion()" class="p-2 bg-green-500 rounded text-gray-800">Generate Chat
-          Completion</button>
-      </div>
-      <h3 class="text-xl">Response:</h3>
-      <pre id="chatCompletionResponse" class="p-2 rounded bg-gray-700 text-green-500"></pre>
+    <div id="intro">
+        <p>
+            Matador is a Bitcoin-powered passthrough server that lets anyone use your API key in exchange for bitcoin
+            micropayments. It is a full API implementation, this demo page shows how to hit against all the supported
+            endpoints</p><br>
+        <p>This deployment of Matador is currently configured to hit against the <a
+                href="https://platform.openai.com/docs/api-reference" style="color: greenyellow">OpenAI API</a> and
+            supports:
+        </p>
+        <div class="text-center"><br>
+            <ol>
+                <li>- chat completions</li>
+                <li>- image generations</li>
+                <li>- embeddings</li>
+                <li>- audio transcriptions (soon TM)</li>
+                <li>- audio translations (soon TM)</li>
+            </ol>
+        </div>
+        <br>
+        <p>To contribute and report issues please jump to the <a href="https://github.com/kodylow/matador"
+                style="color: greenyellow">GitHub</a>.
+        </p>
     </div>
 
-    <div class="headers">
-      <h2 class="text-2xl">L402 Headers for Chat Completion</h2>
-      <h3 class="text-xl">WWW-Authenticate:</h3>
-      <pre id="chatCompletionL402Header" class="p-2 rounded bg-gray-700 text-red-500"></pre>
-      <h3 class="text-xl">Authorization:</h3>
-      <pre id="chatCompletionAuthorizationHeader" class="p-2 rounded bg-gray-700 text-blue-500"></pre>
-    </div>
-  </div>
+    <!-- Chat Completion Demo and Headers -->
+    <div class="grid-container">
+        <div class="demo">
+            <h2 class="text-2xl">Chat Completion Demo</h2>
+            <div class="flex flex-col space-y-2">
+                <label for="model">Model:</label>
+                <select id="model" class="bg-gray-700 p-2 rounded">
+                    <option value="gpt-3.5-turbo">gpt-3.5-turbo</option>
+                    <option value="gpt-4">gpt-4</option>
+                </select>
+                <label for="systemRole">System Prompt:</label>
+                <textarea id="systemRole" class="bg-gray-700 p-2 h-20 rounded">You are a helpful assistant.</textarea>
+                <label for="userRole">User Prompt:</label>
+                <textarea id="userRole" class="bg-gray-700 p-2 h-20 rounded"></textarea>
+                <button onclick="generateChatCompletion()" class="p-2 bg-green-500 rounded text-gray-800">Generate Chat
+                    Completion</button>
+            </div>
+            <h3 class="text-xl">Response:</h3>
+            <pre id="chatCompletionResponse" class="p-2 rounded bg-gray-700 text-green-500"></pre>
+        </div>
 
-  <!-- Image Generation Demo and Headers -->
-  <div class="grid-container">
-    <div class="demo">
-      <h2 class="text-2xl">Image Generation Demo</h2>
-      <div class="flex flex-col space-y-2">
-        <label for="prompt">Prompt:</label>
-        <textarea id="prompt" class="bg-gray-700 p-2 h-20 rounded"></textarea>
-        <button onclick="generateImage()" class="p-2 bg-green-500 rounded text-gray-800">Generate Image</button>
-      </div>
-      <h3 class="text-xl">Response:</h3>
-      <pre id="imageGenerationResponse" class="p-2 rounded bg-gray-700 text-green-500"></pre>
-    </div>
-
-    <div class="headers">
-      <h2 class="text-2xl">L402 Headers for Image Generation</h2>
-      <h3 class="text-xl">WWW-Authenticate:</h3>
-      <pre id="imageGenerationL402Header" class="p-2 rounded bg-gray-700 text-red-500"></pre>
-      <h3 class="text-xl">Authorization:</h3>
-      <pre id="imageGenerationAuthorizationHeader" class="p-2 rounded bg-gray-700 text-blue-500"></pre>
-    </div>
-  </div>
-
-  <!-- Embeddings Demo and Headers -->
-  <div class="grid-container">
-    <div class="demo">
-      <h2 class="text-2xl">Embeddings Demo</h2>
-      <div class="flex flex-col space-y-2">
-        <label for="embeddingInput">Input:</label>
-        <textarea id="embeddingInput"
-          class="bg-gray-700 p-2 h-20 rounded">The food was delicious and the waiter...</textarea>
-        <label for="embeddingModel">Model:</label>
-        <select id="embeddingModel" class="bg-gray-700 p-2 rounded">
-          <option value="text-embedding-ada-002">text-embedding-ada-002</option>
-        </select>
-        <button onclick="generateEmbedding()" class="p-2 bg-green-500 rounded text-gray-800">Generate Embedding</button>
-      </div>
-      <h3 class="text-xl">Response:</h3>
-      <pre id="embeddingResponse" class="p-2 rounded bg-gray-700 text-green-500"></pre>
+        <div class="headers">
+            <h2 class="text-2xl">L402 Headers for Chat Completion</h2>
+            <h3 class="text-xl">WWW-Authenticate:</h3>
+            <pre id="chatCompletionL402Header" class="p-2 rounded bg-gray-700 text-red-500"></pre>
+            <h3 class="text-xl">Authorization:</h3>
+            <pre id="chatCompletionAuthorizationHeader" class="p-2 rounded bg-gray-700 text-blue-500"></pre>
+        </div>
     </div>
 
-    <div class="headers">
-      <h2 class="text-2xl">L402 Headers for Embeddings</h2>
-      <h3 class="text-xl">WWW-Authenticate:</h3>
-      <pre id="embeddingL402Header" class="p-2 rounded bg-gray-700 text-red-500"></pre>
-      <h3 class="text-xl">Authorization:</h3>
-      <pre id="embeddingAuthorizationHeader" class="p-2 rounded bg-gray-700 text-blue-500"></pre>
+    <!-- Image Generation Demo and Headers -->
+    <div class="grid-container">
+        <div class="demo">
+            <h2 class="text-2xl">Image Generation Demo</h2>
+            <div class="flex flex-col space-y-2">
+                <label for="prompt">Prompt:</label>
+                <textarea id="prompt" class="bg-gray-700 p-2 h-20 rounded"></textarea>
+                <button onclick="generateImage()" class="p-2 bg-green-500 rounded text-gray-800">Generate Image</button>
+            </div>
+            <h3 class="text-xl">Response:</h3>
+            <pre id="imageGenerationResponse" class="p-2 rounded bg-gray-700 text-green-500"></pre>
+        </div>
+
+        <div class="headers">
+            <h2 class="text-2xl">L402 Headers for Image Generation</h2>
+            <h3 class="text-xl">WWW-Authenticate:</h3>
+            <pre id="imageGenerationL402Header" class="p-2 rounded bg-gray-700 text-red-500"></pre>
+            <h3 class="text-xl">Authorization:</h3>
+            <pre id="imageGenerationAuthorizationHeader" class="p-2 rounded bg-gray-700 text-blue-500"></pre>
+        </div>
     </div>
-  </div>
-  <script>
-    // destructure the L402 headers from the URL
-    function destructL402Authenticate(header) {
-      // strip off "L402 " from the beginning of the header
-      const l402Header = header.slice(5);
-      let [token, invoice] = l402Header.split(", ")
 
-      // strip off "token=" and "invoice=" from the beginning of the token and invoice
-      token = token.slice(6);
-      invoice = invoice.slice(8);
+    <!-- Embeddings Demo and Headers -->
+    <div class="grid-container">
+        <div class="demo">
+            <h2 class="text-2xl">Embeddings Demo</h2>
+            <div class="flex flex-col space-y-2">
+                <label for="embeddingInput">Input:</label>
+                <textarea id="embeddingInput"
+                    class="bg-gray-700 p-2 h-20 rounded">The food was delicious and the waiter...</textarea>
+                <label for="embeddingModel">Model:</label>
+                <select id="embeddingModel" class="bg-gray-700 p-2 rounded">
+                    <option value="text-embedding-ada-002">text-embedding-ada-002</option>
+                </select>
+                <button onclick="generateEmbedding()" class="p-2 bg-green-500 rounded text-gray-800">Generate
+                    Embedding</button>
+            </div>
+            <h3 class="text-xl">Response:</h3>
+            <pre id="embeddingResponse" class="p-2 rounded bg-gray-700 text-green-500"></pre>
+        </div>
 
-      return [token, invoice];
-    }
-
-    async function fetchWithL402(url, fetchArgs, headerElements) {
-      const { l402ElementId, authorizationElementId } = headerElements;
-      let res = await fetch(url, fetchArgs);
-      if (res.status === 402) {
-        const [token, invoice] = await destructL402Authenticate(res.headers.get("WWW-Authenticate"));
-
-        // Display L402 headers regardless of whether webln is defined or not.
-        displayL402Header(l402ElementId, token, invoice, false);
-
-        if (typeof window.webln !== "undefined") {
-          await window.webln.enable();
-          const { preimage } = await window.webln.sendPayment(invoice);
-          if (!!preimage) {
-            let authorizationValue = `L402 ${token}:${preimage}`;
-            fetchArgs.headers["Authorization"] = authorizationValue;
-
-            // Display Authorization header
-            displayL402Header(authorizationElementId, token, preimage, true);
-
-            res = await fetch(url, fetchArgs);
-            if (res.status === 402) {
-              alert("Payment failed");
-            } else if (res.status === 200) {
-              return res;
-            }
-          } else {
-            alert("Payment failed");
-          }
-        } else {
-          throw new Error("Payment required. L402 header displayed.");
-        }
-      } else if (res.status === 200) {
-        const data = await res.json();
-        return data;
-      }
-      return res;
-    }
-
-
-
-    function displayL402Header(elementId, token, invoice, auth) {
-      if (auth) {
-        document.querySelector("#" + elementId).textContent = `Authorization: L402 ${token}:${invoice}`;
-        return;
-      } else if (invoice) {
-        document.querySelector("#" + elementId).textContent = `WWW-Authenticate: L402 token=${token}, invoice=${invoice}`;
-        return;
-      }
-    }
-
-
-    async function generateChatCompletion() {
-      if (typeof window.webln === "undefined") {
-          alert("This demo of Matador requires a bitcoin browser extension, you can download one at https://getalby.com");
-          return;
-      }
-      const model = document.querySelector("#model").value;
-      const systemRole = document.querySelector("#systemRole").value;
-      const userRole = document.querySelector("#userRole").value;
-      const payload = {
-        model: model,
-        messages: [
-          { role: "system", content: systemRole },
-          { role: "user", content: userRole },
-        ],
-      };
-
-      // Replace the URL with your Matador server's URL
-      const response = await fetchWithL402("https://matador-ai.replit.app/v1/chat/completions", {
-        method: "POST",
-        body: JSON.stringify(payload),
-        mode: "cors",
-        headers: { "Content-Type": "application/json", Accept: "application/json" },
-      }, { l402ElementId: "chatCompletionL402Header", authorizationElementId: "chatCompletionAuthorizationHeader" });
-
-
-      // Displaying the response
-      const json = await response.json();
-      document.querySelector("#chatCompletionResponse").textContent = JSON.stringify(json, null, 2);
-    }
-
-    async function generateImage() {
-        if (typeof window.webln === "undefined") {
-          alert("This demo of Matador requires a bitcoin browser extension, you can download one at https://getalby.com");
-          return;
-      }
-      const prompt = document.querySelector("#prompt").value;
-      const payload = {
-        prompt: prompt,
-        n: 1,
-        size: "512x512",
-        response_format: "url",
-      };
-
-      // Replace the URL with your Matador server's URL
-      const response = await fetchWithL402("https://matador-ai.replit.app/v1/images/generations", {
-        method: "POST",
-        body: JSON.stringify(payload),
-        mode: "cors",
-        headers: { "Content-Type": "application/json", Accept: "application/json" },
-      }, { l402ElementId: "imageGenerationL402Header", authorizationElementId: "imageGenerationAuthorizationHeader" });
-
-
-      // Displaying the response
-      const json = await response.json();
-      document.querySelector("#imageGenerationResponse").textContent = JSON.stringify(json, null, 2);
-    }
-
-    async function generateEmbedding() {
-        if (typeof window.webln === "undefined") {
-          alert("This demo of Matador requires a bitcoin browser extension, you can download one at https://getalby.com");
-          return;
-      }
-      const input = document.querySelector("#embeddingInput").value;
-      const model = document.querySelector("#embeddingModel").value;
-      const payload = {
-        input: input,
-        model: model
-      };
-
-      const response = await fetchWithL402("http://localhost:8080/v1/embeddings", {
-        method: "POST",
-        body: JSON.stringify(payload),
-        mode: "cors",
-        headers: { "Content-Type": "application/json", Accept: "application/json" },
-      }, { l402ElementId: "embeddingL402Header", authorizationElementId: "embeddingAuthorizationHeader" });
-
-      // Displaying the response
-      const json = await response.json();
-      // limiting the number of embeddings displayed
-      json.data[0].embedding = json.data[0].embedding.slice(0, 10).concat(["... (total 1536 values)"]);
-      document.querySelector("#embeddingResponse").textContent = JSON.stringify(json, null, 2);
-    }
-
-    function expandText() {
-      let content = document.getElementById('expandable');
-      content.style.webkitLineClamp = 'unset';
-    }
-
-    function toggleSwitch(element) {
-      const isChecked = element.checked;
-      const chatCompletionSection = document.querySelector('.chat-completion');
-      const imageGenerationSection = document.querySelector('.image-generation');
-      if (isChecked) {
-        chatCompletionSection.style.display = 'none';
-        imageGenerationSection.style.display = 'block';
-      } else {
-        chatCompletionSection.style.display = 'block';
-        imageGenerationSection.style.display = 'none';
-      }
-    }
-  </script>
+        <div class="headers">
+            <h2 class="text-2xl">L402 Headers for Embeddings</h2>
+            <h3 class="text-xl">WWW-Authenticate:</h3>
+            <pre id="embeddingL402Header" class="p-2 rounded bg-gray-700 text-red-500"></pre>
+            <h3 class="text-xl">Authorization:</h3>
+            <pre id="embeddingAuthorizationHeader" class="p-2 rounded bg-gray-700 text-blue-500"></pre>
+        </div>
+    </div>
+    <script src="index.js"></script>
 </body>
 
 </html>

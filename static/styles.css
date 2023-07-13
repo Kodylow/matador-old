@@ -1,0 +1,55 @@
+@import url('https://fonts.googleapis.com/css2?family=Orbitron&display=swap');
+
+body {
+    font-family: 'Orbitron', sans-serif;
+    width: 98vw;
+    /* set width to 98% of viewport width */
+    height: 98vh;
+    /* set height to 98% of viewport height */
+    margin: auto;
+    /* center the body */
+    overflow: auto;
+    /* add scrolling when content exceeds body size */
+    background-color: #181a1b;
+}
+
+.dot {
+    transition: .5s ease-in;
+}
+
+.grid-container {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    width: 100%;
+}
+
+.demo {
+    border-right: 2px solid #ccc;
+    padding-right: 10px;
+    width: 100%;
+}
+
+.headers {
+    width: 100%;
+    padding-left: 10px;
+    /* limit the width of the headers section */
+    overflow-x: auto;
+    /* add horizontal scrolling when content exceeds section width */
+}
+
+pre {
+    white-space: pre-wrap;
+    /* allow long lines to wrap */
+    word-wrap: break-word;
+    /* allow long words to be broken and wrapped */
+    overflow-wrap: break-word;
+    /* similar to word-wrap, but more comprehensive */
+}
+
+#expandable {
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    /* number of lines to show */
+    -webkit-box-orient: vertical;
+}
