@@ -11,6 +11,7 @@ POST $API_ROOT/v1/chat/completions
 GET $API_ROOT/v1/images/generations
 GET $API_ROOT/v1/models
 GET $API_ROOT/v1/models/{model}
+POST $API_ROOT/v1/embeddings
 ```
 
 You can try it out by hitting exactly like you would hit against `https://api.openai.com` but without the OpenAI Authentication Header:

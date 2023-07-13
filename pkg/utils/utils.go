@@ -29,6 +29,8 @@ func ModelPricingDollarsPer1KTokens(model string) (float64, error) {
 		return 0.002, nil
 	case "gpt-3.5-turbo-16k", "gpt-3.5-turbo-16k-0613":
 		return 0.004, nil
+	case "text-embedding-ada-002": // for embeddings, just piggybacking refactor this later
+		return 0.0001, nil
 	default:
 		return 0, fmt.Errorf("Unknown model: %s", model)
 	}
@@ -102,5 +104,30 @@ func NumTokensFromMessages(messages []openai.ChatCompletionMessage, model string
 		}
 	}
 	numTokens += 3 // every reply is primed with <|start|>assistant<|message|>
+	return numTokens
+}
+
+func NumTokensEmbeddings(input []interface{}, model string) int {
+	tkm, err := tiktoken.EncodingForModel(model)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	numTokens := 0
+	for _, inp := range input {
+		switch inp := inp.(type) {
+		case string:
+			tokens := tkm.EncodeOrdinary(inp)
+			numTokens += len(tokens)
+		case []string:
+			for _, str := range inp {
+				tokens := tkm.EncodeOrdinary(str)
+				numTokens += len(tokens)
+			}
+		default:
+			log.Fatalf("input type %T not supported", inp)
+		}
+	}
+
 	return numTokens
 }

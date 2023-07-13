@@ -7,6 +7,7 @@ import (
 	"log"
 	"net/http"
 
+	"github.com/gorilla/mux"
 	"github.com/kodylow/matador/pkg/auth"
 	models "github.com/kodylow/matador/pkg/models"
 	"github.com/kodylow/matador/pkg/service"
@@ -30,6 +31,22 @@ func Init(key string, root string, lnAddress string) error {
 // PassthroughHandler forwards the request to the OpenAI API
 func PassthroughHandler(w http.ResponseWriter, r *http.Request) {
 	log.Println("passthroughHandler started")
+
+	// Check if the requested endpoint is supported
+	reqPath := r.URL.Path
+	reqMethod := r.Method
+	var isSupported bool
+	for _, endpoint := range service.SupportedEndpoints {
+		if reqPath == endpoint.Path && reqMethod == endpoint.Method {
+			isSupported = true
+			break
+		}
+	}
+
+	if !isSupported {
+		http.Error(w, "Endpoint not supported", http.StatusNotFound)
+		return
+	}
 
 	// Read the body
 	body, err := io.ReadAll(r.Body)
@@ -98,4 +115,46 @@ func PassthroughHandler(w http.ResponseWriter, r *http.Request) {
 	w.Write(responseBody)
 
 	log.Println("passthroughHandler completed")
+}
+
+// ModelsHandler returns a list of all models
+func ModelsHandler(w http.ResponseWriter, r *http.Request) {
+	// Hardcode the path and method
+	r.URL.Path = "/v1/models"
+	r.Method = "GET"
+	PassthroughHandler(w, r)
+}
+
+// SpecificModelHandler returns a specific model
+func SpecificModelHandler(w http.ResponseWriter, r *http.Request) {
+	// Get the model ID from the URL
+	id := mux.Vars(r)["id"]
+	// Hardcode the path and method
+	r.URL.Path = "/v1/models/" + id
+	r.Method = "GET"
+	PassthroughHandler(w, r)
+}
+
+// ChatCompletionsHandler handles chat completions
+func ChatCompletionsHandler(w http.ResponseWriter, r *http.Request) {
+	// Hardcode the path and method
+	r.URL.Path = "/v1/chat/completions"
+	r.Method = "POST"
+	PassthroughHandler(w, r)
+}
+
+// ImagesGenerationsHandler handles image generations
+func ImagesGenerationsHandler(w http.ResponseWriter, r *http.Request) {
+	// Hardcode the path and method
+	r.URL.Path = "/v1/images/generations"
+	r.Method = "POST"
+	PassthroughHandler(w, r)
+}
+
+// EmbeddingsHandler handles embeddings
+func EmbeddingsHandler(w http.ResponseWriter, r *http.Request) {
+	// Hardcode the path and method
+	r.URL.Path = "/v1/embeddings"
+	r.Method = "POST"
+	PassthroughHandler(w, r)
 }

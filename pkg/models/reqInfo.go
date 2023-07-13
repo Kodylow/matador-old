@@ -104,3 +104,28 @@ func (self *RequestInfo) L402IsValid() error {
 
 	return nil
 }
+
+type EmbeddingRequest struct {
+	Model string      `json:"model"`
+	Input interface{} `json:"input"`
+	User  string      `json:"user,omitempty"`
+}
+
+func (r *EmbeddingRequest) Validate() error {
+	if r.Model == "" {
+		return errors.New("model is required")
+	}
+	switch v := r.Input.(type) {
+	case string:
+		if v == "" {
+			return errors.New("input is required")
+		}
+	case []interface{}:
+		if len(v) == 0 {
+			return errors.New("input is required")
+		}
+	default:
+		return errors.New("invalid type for input field")
+	}
+	return nil
+}

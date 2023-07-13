@@ -82,3 +82,45 @@ func getMsatsImageGenerations(reqInfo models.RequestInfo) (uint64, error) {
 
 	return msats, nil
 }
+
+func getMsatsEmbeddings(reqInfo models.RequestInfo) (uint64, error) {
+	// Get the body of the request as an EmbeddingRequest
+	var body models.EmbeddingRequest
+	err := json.NewDecoder(bytes.NewReader(reqInfo.Body)).Decode(&body)
+	if err != nil {
+		log.Println("Error decoding Embedding request body:", err)
+		return 0, fmt.Errorf("Error decoding Embedding request body: %w", err)
+	}
+
+	// Validate the body
+	if err = body.Validate(); err != nil {
+		log.Println(err)
+		return 0, err
+	}
+
+	// Handle both string and slice of strings for Input field
+	var tokens int
+	switch v := body.Input.(type) {
+	case string:
+		tokens = utils.NumTokensEmbeddings([]interface{}{v}, body.Model)
+	case []interface{}:
+		tokens = utils.NumTokensEmbeddings(v, body.Model)
+	default:
+		log.Println("Invalid type for input field")
+		return 0, fmt.Errorf("Invalid type for input field")
+	}
+
+	// Get the mSats for the number of tokens
+	msats, err := utils.TokensToMsats(tokens, body.Model)
+	if err != nil {
+		log.Println("Error converting tokens to msats:", err)
+		return 0, err
+	}
+
+	// set min price to 1000 msats
+	if msats < 1000 {
+		msats = 1000
+	}
+
+	return msats, nil
+}

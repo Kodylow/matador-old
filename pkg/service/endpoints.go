@@ -14,7 +14,7 @@ type Endpoint struct {
 }
 
 // List of endpoints
-var supportedEndpoints = []Endpoint{
+var SupportedEndpoints = []Endpoint{
 	{"GET", "/v1/models", get1000Msats},                       // done
 	{"GET", "/v1/models/", get1000Msats},                      // done
 	{"POST", "/v1/chat/completions", getMsatsChatCompletions}, //done
@@ -22,7 +22,7 @@ var supportedEndpoints = []Endpoint{
 	{"POST", "/v1/images/generations", getMsatsImageGenerations}, // done
 	// {"POST", "/v1/images/edits", getMsats},
 	// {"POST", "/v1/images/variations", getMsats},
-	// {"POST", "/v1/embeddings", getMsats},
+	{"POST", "/v1/embeddings", getMsatsEmbeddings},
 	// {"POST", "/v1/audio/transcriptions", getMsats},
 	// {"POST", "/v1/audio/translations", getMsats},
 	//   {"GET /v1/files", getMsats},
@@ -41,7 +41,7 @@ var supportedEndpoints = []Endpoint{
 
 // MatchRequestMethodPath function
 func MatchRequestMethodPath(reqInfo models.RequestInfo) (uint64, error) {
-	for _, endpoint := range supportedEndpoints {
+	for _, endpoint := range SupportedEndpoints {
 		matched_path, err := path.Match(endpoint.Path, reqInfo.Path)
 		if err != nil {
 			return 0, err

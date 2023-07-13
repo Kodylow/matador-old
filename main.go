@@ -6,6 +6,7 @@ import (
 	"os"
 
 	"github.com/gorilla/mux"
+	"github.com/joho/godotenv"
 	"github.com/kodylow/matador/pkg/auth"
 	"github.com/kodylow/matador/pkg/database"
 	"github.com/kodylow/matador/pkg/handler"
@@ -13,7 +14,13 @@ import (
 )
 
 func init() {
-	err := handler.Init(os.Getenv("API_KEY"), os.Getenv("API_ROOT"), os.Getenv("LN_ADDRESS"))
+	// read in .env
+	err := godotenv.Load(".env")
+	if err != nil {
+		log.Fatal("Error loading .env file: ", err)
+	}
+
+	err = handler.Init(os.Getenv("API_KEY"), os.Getenv("API_ROOT"), os.Getenv("LN_ADDRESS"))
 	if err != nil {
 		log.Fatal("Error initializing environment variables for handlers: ", err)
 	}
@@ -34,12 +41,14 @@ func main() {
 	router := mux.NewRouter()
 
 	// Root handler
-	router.HandleFunc("/", handler.RootHandler)
-	// router.PathPrefix("/").Handler(http.FileServer(http.Dir("./static")))
+	// router.HandleFunc("/", handler.RootHandler
 
-	// v1 subrouter
-	v1Router := router.PathPrefix("/v1/").Subrouter()
-	v1Router.PathPrefix("/").HandlerFunc(handler.PassthroughHandler)
+	router.HandleFunc("/v1/models", handler.ModelsHandler).Methods("GET")
+	router.HandleFunc("/v1/models/", handler.SpecificModelHandler).Methods("GET")
+	router.HandleFunc("/v1/chat/completions", handler.ChatCompletionsHandler).Methods("POST")
+	router.HandleFunc("/v1/images/generations", handler.ImagesGenerationsHandler).Methods("POST")
+	router.HandleFunc("/v1/embeddings", handler.EmbeddingsHandler).Methods("POST")
+	router.PathPrefix("/").Handler(http.FileServer(http.Dir("./static/")))
 
 	// setup CORS
 	c := cors.New(cors.Options{
