@@ -233,6 +233,10 @@
 
 
     async function generateChatCompletion() {
+      if (typeof window.webln === "undefined") {
+          alert("This demo of Matador requires a bitcoin browser extension, you can download one at https://getalby.com");
+          return;
+      }
       const model = document.querySelector("#model").value;
       const systemRole = document.querySelector("#systemRole").value;
       const userRole = document.querySelector("#userRole").value;
@@ -259,6 +263,10 @@
     }
 
     async function generateImage() {
+        if (typeof window.webln === "undefined") {
+          alert("This demo of Matador requires a bitcoin browser extension, you can download one at https://getalby.com");
+          return;
+      }
       const prompt = document.querySelector("#prompt").value;
       const payload = {
         prompt: prompt,
@@ -282,6 +290,10 @@
     }
 
     async function generateEmbedding() {
+        if (typeof window.webln === "undefined") {
+          alert("This demo of Matador requires a bitcoin browser extension, you can download one at https://getalby.com");
+          return;
+      }
       const input = document.querySelector("#embeddingInput").value;
       const model = document.querySelector("#embeddingModel").value;
       const payload = {

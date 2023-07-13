@@ -1,4 +1,4 @@
-run = ["./matador"]
+run = ["go", "run", "main.go"]
 
 entrypoint = "main.go"
 hidden = ["main"]
