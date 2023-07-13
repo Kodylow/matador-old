@@ -71,13 +71,10 @@ func PassthroughHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// Copy headers from the original request
-	for k, v := range r.Header {
-		req.Header.Set(k, v[0])
-	}
-
 	// overwrite the Authorization with the API Key
 	req.Header.Set("Authorization", "Bearer "+APIKey)
+	req.Header.Set("Content-Type", "application/json")
+	req.Header.Set("Accept", "application/json")
 	log.Println("Forwarding request to OpenAI API")
 	log.Println("Request:", req)
 	// Forward the request

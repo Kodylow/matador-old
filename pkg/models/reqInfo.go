@@ -69,7 +69,6 @@ func checkTokenRestrictions(runeB64 string, preimage string, reqHash string) boo
 	secret, err := hex.DecodeString(envSecret)
 
 	master := runes.MustMakeMasterRune(secret)
-	log.Println("Master Rune:", master.Rune.ToBase64())
 	// decode the given rune from base64
 	restrictedRune := runes.MustGetFromBase64(runeB64)
 	log.Println("Restricted Rune:", restrictedRune)

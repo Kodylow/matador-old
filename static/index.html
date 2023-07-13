@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Matador Demo Page</title>
+    <script>
+      // Mocking the fetchWithL402 function from your App code
+      async function fetchWithL402(url, fetchArgs, options) {
+        let res = await fetch(url, fetchArgs, options);
+        if (res.status === 402) {
+            throw new Error('L402');
+        }
+        return res;
+      })
+
+      async function generateChatCompletion() {
+        const model = document.querySelector("#model").value;
+        const systemRole = document.querySelector("#systemRole").value;
+        const userRole = document.querySelector("#userRole").value;
+        const payload = {
+          model: model,
+          messages: [
+            { role: "system", content: systemRole },
+            { role: "user", content: userRole },
+          ],
+        };
+
+        // Replace the URL with your Matador server's URL
+        const response = await fetchWithL402("https://matador-ai.replit.app/v1/chat/completions", {
+          method: "POST",
+          body: JSON.stringify(payload),
+          mode: "cors",
+          headers: { "Content-Type": "application/json", Accept: "application/json" },
+        });
+
+        // Displaying the response
+        const json = await response.json();
+        document.querySelector("#chatCompletionResponse").textContent = JSON.stringify(json, null, 2);
+      }
+
+      async function generateImage() {
+        const prompt = document.querySelector("#prompt").value;
+        const payload = {
+          prompt: prompt,
+          n: 1,
+          size: "512x512",
+          response_format: "url",
+        };
+
+        // Replace the URL with your Matador server's URL
+        const response = await fetchWithL402("https://matador-ai.replit.app/v1/images/generations", {
+          method: "POST",
+          body: JSON.stringify(payload),
+          mode: "cors",
+          headers: { "Content-Type": "application/json", Accept: "application/json" },
+        });
+
+        // Displaying the response
+        const json = await response.json();
+        document.querySelector("#imageGenerationResponse").textContent = JSON.stringify(json, null, 2);
+      }
+    </script>
+  </head>
+  <body>
+    <h1>Matador Demo Page</h1>
+
+    <h2>Chat Completion Demo</h2>
+    <label for="model">Model:</label><input type="text" id="model" />
+    <label for="systemRole">System Role:</label><input type="text" id="systemRole" />
+    <label for="userRole">User Role:</label><input type="text" id="userRole" />
+    <button onclick="generateChatCompletion()">Generate Chat Completion</button>
+    <h3>Response:</h3>
+    <pre id="chatCompletionResponse"></pre>
+
+    <h2>Image Generation Demo</h2>
+    <label for="prompt">Prompt:</label><input type="text" id="prompt" />
+    <button onclick="generateImage()">Generate Image</button>
+    <h3>Response:</h3>
+    <pre id="imageGenerationResponse"></pre>
+  </body>
+</html>

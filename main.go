@@ -35,6 +35,7 @@ func main() {
 
 	// Root handler
 	router.HandleFunc("/", handler.RootHandler)
+	// router.PathPrefix("/").Handler(http.FileServer(http.Dir("./static")))
 
 	// v1 subrouter
 	v1Router := router.PathPrefix("/v1/").Subrouter()
@@ -45,7 +46,7 @@ func main() {
 		AllowedOrigins:   []string{"*"}, // change this to the domains you want to al
 		AllowedMethods:   []string{"GET", "POST", "OPTIONS", "PUT", "DELETE"},
 		AllowedHeaders:   []string{"*"}, // change this to the headers you want to allow
-        ExposedHeaders:   []string{"*"}, // change this to the headers you want to expose
+		ExposedHeaders:   []string{"*"}, // change this to the headers you want to expose
 		AllowCredentials: true,
 	})
 
