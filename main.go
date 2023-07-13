@@ -48,6 +48,7 @@ func main() {
 	router.HandleFunc("/v1/chat/completions", handler.ChatCompletionsHandler).Methods("POST")
 	router.HandleFunc("/v1/images/generations", handler.ImagesGenerationsHandler).Methods("POST")
 	router.HandleFunc("/v1/embeddings", handler.EmbeddingsHandler).Methods("POST")
+	router.HandleFunc("/v1/audio/transcriptions", handler.AudioTranscriptionsHandler).Methods("POST")
 	router.PathPrefix("/").Handler(http.FileServer(http.Dir("./static/")))
 
 	// setup CORS

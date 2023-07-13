@@ -124,3 +124,30 @@ func getMsatsEmbeddings(reqInfo models.RequestInfo) (uint64, error) {
 
 	return msats, nil
 }
+
+func getMsatsAudioTranscriptions(reqInfo models.RequestInfo) (uint64, error) {
+	// Get the body of the request as a AudioTranscriptionRequest
+	var body models.AudioTranscriptionRequest
+	err := json.NewDecoder(bytes.NewReader(reqInfo.Body)).Decode(&body)
+	if err != nil {
+		log.Println("Error decoding AudioTranscription request body:", err)
+		return 0, fmt.Errorf("Error decoding AudioTranscription request body: %w", err)
+	}
+
+	// Validate the body
+	if err = body.Validate(); err != nil {
+		log.Println(err)
+		return 0, err
+	}
+
+	// Assume the duration is in seconds, convert it to minutes
+	durationInMinutes := float64(body.Duration) / 60.0
+
+	// Calculate the cost
+	dollars := durationInMinutes * 0.006 // $0.006 per minute
+
+	// convert dollars to msats
+	msats := utils.DollarsToMsats(dollars)
+
+	return msats, nil
+}

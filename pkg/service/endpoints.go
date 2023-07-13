@@ -23,7 +23,7 @@ var SupportedEndpoints = []Endpoint{
 	// {"POST", "/v1/images/edits", getMsats},
 	// {"POST", "/v1/images/variations", getMsats},
 	{"POST", "/v1/embeddings", getMsatsEmbeddings},
-	// {"POST", "/v1/audio/transcriptions", getMsats},
+	{"POST", "/v1/audio/transcriptions", getMsatsAudioTranscriptions},
 	// {"POST", "/v1/audio/translations", getMsats},
 	//   {"GET /v1/files", getMsats},
 	//   {"POST /v1/files", getMsats},

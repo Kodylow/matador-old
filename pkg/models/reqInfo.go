@@ -129,3 +129,47 @@ func (r *EmbeddingRequest) Validate() error {
 	}
 	return nil
 }
+
+type AudioTranscriptionRequest struct {
+	File           []byte   `json:"file"`            // The audio file object
+	Model          string   `json:"model"`           // ID of the model to use
+	Prompt         *string  `json:"prompt"`          // An optional text to guide the model's style
+	ResponseFormat *string  `json:"response_format"` // The format of the transcript output
+	Temperature    *float64 `json:"temperature"`     // The sampling temperature
+}
+
+func (r AudioTranscriptionRequest) Validate() error {
+	// Check if the required fields are present
+	if r.File == nil || len(r.File) == 0 || r.Model == "" {
+		return fmt.Errorf("missing required fields")
+	}
+
+	// Check if model is correct
+	if r.Model != "whisper-1" {
+		return fmt.Errorf("invalid model")
+	}
+
+	// Check if temperature is in range if provided
+	if r.Temperature != nil {
+		if *r.Temperature < 0 || *r.Temperature > 1 {
+			return fmt.Errorf("temperature out of range")
+		}
+	}
+
+	// Check if response format is valid if provided
+	if r.ResponseFormat != nil {
+		validFormats := []string{"json", "text", "srt", "verbose_json", "vtt"}
+		isValid := false
+		for _, format := range validFormats {
+			if *r.ResponseFormat == format {
+				isValid = true
+				break
+			}
+		}
+		if !isValid {
+			return fmt.Errorf("invalid response format")
+		}
+	}
+
+	return nil
+}

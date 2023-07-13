@@ -158,3 +158,11 @@ func EmbeddingsHandler(w http.ResponseWriter, r *http.Request) {
 	r.Method = "POST"
 	PassthroughHandler(w, r)
 }
+
+// AudioTranscriptionsHandler handles audio transcriptions
+func AudioTranscriptionsHandler(w http.ResponseWriter, r *http.Request) {
+	// Hardcode the path and method
+	r.URL.Path = "/v1/audio/transcriptions"
+	r.Method = "POST"
+	PassthroughHandler(w, r)
+}
