@@ -9,6 +9,7 @@
             <button onclick="generateImage()" class="p-2 bg-green-500 rounded text-gray-800">Generate Image</button>
         </div>
         <h3 class="text-xl">Response:</h3>
+        <img id="generatedImage" class="max-w-xs rounded" />
         <pre id="imageGenerationResponse" class="p-2 rounded bg-gray-700 text-green-500"></pre>
     </div>
 
@@ -48,6 +49,10 @@
 
         // Displaying the response
         const json = await response.json();
+        // Get the image URL
+        const imageUrl = json.data[0].url;
+        // Assign it to the img element
+        document.querySelector("#generatedImage").src = imageUrl;
         document.querySelector("#imageGenerationResponse").textContent = JSON.stringify(json, null, 2);
     }
 </script>
