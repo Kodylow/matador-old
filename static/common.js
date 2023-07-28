@@ -3,10 +3,13 @@ function destructL402Authenticate(header) {
     // strip off "L402 " from the beginning of the header
     const l402Header = header.slice(5);
     let [token, invoice] = l402Header.split(", ")
-
+    console.log("token:", token)
+    console.log("invoice:", invoice)
     // strip off "token=" and "invoice=" from the beginning of the token and invoice
-    token = token.slice(6);
-    invoice = invoice.slice(8);
+    token = token.slice(6).replace("\"", "");
+    invoice = invoice.slice(8).replace("\"", "");
+    console.log("token:", token)
+    console.log("invoice:", invoice)
 
     return [token, invoice];
 }
