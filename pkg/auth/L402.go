@@ -113,6 +113,6 @@ func GetL402(reqInfo models.RequestInfo) (string, error) {
 		return "", err
 	}
 
-	l402 := fmt.Sprintf("L402 token=\"%s\", invoice=\"%s\"", token, invoice)
+	l402 := fmt.Sprintf("L402 token=%s, invoice=%s", token, invoice)
 	return l402, nil
 }

@@ -6,8 +6,8 @@ function destructL402Authenticate(header) {
     console.log("token:", token)
     console.log("invoice:", invoice)
     // strip off "token=" and "invoice=" from the beginning of the token and invoice
-    token = token.slice(6).replace("\"", "");
-    invoice = invoice.slice(8).replace("\"", "");
+    token = token.replace(/"/g, "");
+    invoice = invoice.replace(/"/g, "");
     console.log("token:", token)
     console.log("invoice:", invoice)
 
