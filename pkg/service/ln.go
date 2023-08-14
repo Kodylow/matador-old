@@ -7,6 +7,7 @@ import (
 	"log"
 	"net/http"
 	"strings"
+	"time"
 
 	ln "github.com/nbd-wtf/ln-decodepay"
 )
@@ -56,7 +57,9 @@ func GetInvoice(msats uint64) (string, error) {
 	if msats > LnAddr.MaxSendable || msats < LnAddr.MinSendable {
 		return "", fmt.Errorf("%d msats not in sendable range of %d - %d:", msats, LnAddr.MinSendable, LnAddr.MaxSendable)
 	}
-	resp, err := http.Get(fmt.Sprintf("%s?amount=%d", LnAddr.Callback, msats))
+	expiration := time.Now().Add(time.Hour)
+	url := fmt.Sprintf("%s?amount=%d&expiry=%d", LnAddr.Callback, msats, expiration)
+    resp, err := http.Get(url)
 	if err != nil {
 		log.Println("Error getting invoice:", err)
 		return "", err
