@@ -53,34 +53,34 @@ func GetCallback(lnAddress string) (LnAddressResponse, error) {
 }
 
 // GetInvoice gets an invoice from the lightning callback
-func GetInvoice(msats uint64) (string, error) {
+func GetInvoice(msats uint64) (string, string,error) {
 	if msats > LnAddr.MaxSendable || msats < LnAddr.MinSendable {
-		return "", fmt.Errorf("%d msats not in sendable range of %d - %d:", msats, LnAddr.MinSendable, LnAddr.MaxSendable)
+		return "", "",fmt.Errorf("%d msats not in sendable range of %d - %d:", msats, LnAddr.MinSendable, LnAddr.MaxSendable)
 	}
 	expiration := time.Now().Add(time.Hour)
 	url := fmt.Sprintf("%s?amount=%d&expiry=%d", LnAddr.Callback, msats, expiration)
     resp, err := http.Get(url)
 	if err != nil {
 		log.Println("Error getting invoice:", err)
-		return "", err
+		return "","", err
 	}
 
 	bodyBytes, err := io.ReadAll(resp.Body)
 	if err != nil {
 		log.Println("Error reading response body:", err)
-		return "", err
+		return "", "",err
 	}
 
 	var lnCallbackResp LnCallbackResponse
 	err = json.Unmarshal(bodyBytes, &lnCallbackResp)
 	if err != nil {
 		log.Println("Error decoding callback response:", err)
-		return "", err
+		return "", "",err
 	}
 
 	log.Println("Verify Url:", lnCallbackResp.Verify)
 
-	return lnCallbackResp.Pr, nil
+	return lnCallbackResp.Pr,lnCallbackResp.Verify, nil
 }
 
 func GetPaymentHash(invoice string) (string, error) {

@@ -18,6 +18,7 @@ func ExtractToken(authHeader string) (string, error) {
 	log.Println("Extracting token from Authorization header:", authHeader)
 	parts := strings.Split(authHeader, " ")
 	if len(parts) != 2 || parts[0] != "L402" {
+		fmt.Sprintf("authHeader: %s",authHeader)
 		return "", fmt.Errorf("Invalid Authorization header format: should be L402 token:preimage")
 	}
 
@@ -85,7 +86,7 @@ func GetL402(reqInfo models.RequestInfo) (string, error) {
 		log.Println("Error matching request method and path for pricing:", err)
 		return "", err
 	}
-	invoice, err := service.GetInvoice(msats)
+	invoice,verifyURL, err := service.GetInvoice(msats)
 	if err != nil {
 		log.Println("Error getting invoice:", err)
 		return "", err
@@ -113,6 +114,6 @@ func GetL402(reqInfo models.RequestInfo) (string, error) {
 		return "", err
 	}
 
-	l402 := fmt.Sprintf("L402 token=\"%s\", invoice=\"%s\"", token, invoice)
+	l402 := fmt.Sprintf("L402 token=\"%s\", invoice=\"%s\",verifyURL=\"%s\"", token, invoice,verifyURL)
 	return l402, nil
 }
